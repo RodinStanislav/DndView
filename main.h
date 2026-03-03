@@ -29,6 +29,23 @@ public:
     dnd::model::Attribute data;
 };
 
+class Skill {
+    Q_GADGET
+
+    Q_PROPERTY(QString name READ getName CONSTANT FINAL)
+    Q_PROPERTY(QString dependentAttribute READ getDependentAttribute CONSTANT FINAL)
+public:
+    Q_INVOKABLE QString getName() const {
+        return QString::fromStdString(data.name);
+    }
+
+    Q_INVOKABLE QString getDependentAttribute() const {
+        return QString::fromStdString(data.dependentAttribute);
+    }
+
+    dnd::model::Skill data;
+};
+
 class Race {
     Q_GADGET
 
@@ -84,6 +101,7 @@ class Backend : public QObject {
     Q_PROPERTY(QVector<dnd::view::Race> races READ getAllRaces CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Character> characters READ getAllCharacters CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Attribute> attributes READ getAllAttributes CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Skill> skills READ getAllSkills CONSTANT FINAL)
 
 public:
 
@@ -125,6 +143,17 @@ public slots:
         return attributes;
     }
 
+    Q_INVOKABLE QVector<dnd::view::Skill> getAllSkills() const {
+        QVector<dnd::view::Skill> skills;
+
+        for (auto& skill : project.skills) {
+            skills.emplace_back();
+            skills.back().data = skill;
+        }
+
+        return skills;
+    }
+
     Q_INVOKABLE void createCharacter(const QString& name, const QString& raceName) {
         dnd::model::Character newCharacter;
         auto allRaces = dnd::model::getDefaultRaces();
@@ -146,6 +175,7 @@ public slots:
 
             project.races = model::getDefaultRaces();
             project.attributes = model::getDefaultAttributes();
+            project.skills = model::getDefaultSkills();
 
             return;
         }
