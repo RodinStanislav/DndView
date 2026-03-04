@@ -11,6 +11,9 @@ struct Class {
     std::vector<std::string> armors;
     std::vector<std::string> weaponTypes;
     std::vector<std::string> weapons;
+    uint32_t avaliableProficiencySkillCount = 0;
+    std::vector<std::string> avaliableProficiencySkills;
+    std::vector<std::string> savingThrows;
     uint32_t hitPoints;
 };
 

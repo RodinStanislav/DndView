@@ -30,6 +30,23 @@ public:
     int value = 0;
 };
 
+class Skill {
+    Q_GADGET
+
+    Q_PROPERTY(QString name READ getName CONSTANT FINAL)
+    Q_PROPERTY(QString dependentAttribute READ getDependentAttribute CONSTANT FINAL)
+public:
+    Q_INVOKABLE QString getName() const {
+        return QString::fromStdString(data.name);
+    }
+
+    Q_INVOKABLE QString getDependentAttribute() const {
+        return QString::fromStdString(data.dependentAttribute);
+    }
+
+    dnd::model::Skill data;
+};
+
 class Armor {
     Q_GADGET
 
@@ -60,6 +77,9 @@ class Class {
     Q_PROPERTY(QString name READ getName CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Armor> armors READ getArmors CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Weapon> weapons READ getWeapons CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Attribute> savingThrows READ getSavingThrows CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Skill> avaliableProficiencySkills READ getAvaliableProficiencySkills CONSTANT FINAL)
+    Q_PROPERTY(int avaliableProficiencySkillCount READ getAvaliableProficiencySkillCount CONSTANT FINAL)
 
 public:
     Q_INVOKABLE QString getName() const {
@@ -114,26 +134,38 @@ public:
         return weapons;
     }
 
+    Q_INVOKABLE QVector<dnd::view::Attribute> getSavingThrows() const {
+        QVector<dnd::view::Attribute> savingThrows;
+
+        for (const auto& savingThrow : data.savingThrows) {
+            savingThrows.emplace_back();
+            savingThrows.back().data = *std::find_if(project->attributes.begin(), project->attributes.end(), [&](const model::Attribute& attribute) {
+                return attribute.name == savingThrow;
+            });
+        }
+
+        return savingThrows;
+    }
+
+    Q_INVOKABLE QVector<dnd::view::Skill> getAvaliableProficiencySkills() const {
+        QVector<dnd::view::Skill> avaliableProficiencySkills;
+
+        for (const auto& proficiencySkill : data.avaliableProficiencySkills) {
+            avaliableProficiencySkills.emplace_back();
+            avaliableProficiencySkills.back().data = *std::find_if(project->skills.begin(), project->skills.end(), [&](const model::Skill& skill) {
+                return skill.name == proficiencySkill;
+            });
+        }
+
+        return avaliableProficiencySkills;
+    }
+
+    Q_INVOKABLE int getAvaliableProficiencySkillCount() const {
+        return data.avaliableProficiencySkillCount;
+    }
+
     model::Project const* project;
     dnd::model::Class data;
-};
-
-class Skill {
-    Q_GADGET
-
-    Q_PROPERTY(QString name READ getName CONSTANT FINAL)
-    Q_PROPERTY(QString dependentAttribute READ getDependentAttribute CONSTANT FINAL)
-public:
-    Q_INVOKABLE QString getName() const {
-        return QString::fromStdString(data.name);
-    }
-
-    Q_INVOKABLE QString getDependentAttribute() const {
-        return QString::fromStdString(data.dependentAttribute);
-    }
-
-
-    dnd::model::Skill data;
 };
 
 class Race {

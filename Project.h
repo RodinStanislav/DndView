@@ -2,6 +2,8 @@
 #define PROJECT_H
 
 #include "Character.h"
+#include "Attribute.h"
+#include "Race.h"
 #include "Skill.h"
 #include "Class.h"
 #include "ArmorType.h"

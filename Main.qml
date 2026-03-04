@@ -4,7 +4,7 @@ import QtQuick.Layouts
 
 Window {
     width: 800
-    height: 640
+    height: 650
     visible: true
     title: qsTr("Dnd View")
 
@@ -285,40 +285,107 @@ Window {
                 Layout.fillWidth: true
             }
 
+            Label {
+                id: proficiencyBonusLabel
+                readonly property int proficiencyBonus: 2
+
+                text: "Proficiency bonus: " + proficiencyBonus
+            }
+
             ListView {
                 id: skillTable
 
+                property int avaliableProficiencySkillCount: 0
+                property int selectedProficiencySkillCount: 0
+
                 Layout.fillWidth: true
-                height: 300
+                height: 450
 
                 model: ListModel {}
-                delegate: Label {
+                delegate: Rectangle {
                     required property var skill
                     required property int value
+                    required property bool isAvaliableProficiency
+                    required property bool isProficiencySelected
+                    required property int index
 
                     width: skillTable.width
+                    height: 24
 
-                    text: skill.name + ": " + value
+                    Label {
+                        width: skillTable.width
+                        height: 24
+
+                        text: {
+                            let strValue = skill.name + ": " + value
+                            if (parent.isProficiencySelected) {
+                                strValue += " + " + proficiencyBonusLabel.proficiencyBonus
+                            }
+
+                            return strValue
+                        }
+                    }
+
+                    CheckBox {
+                        anchors.right: parent.right
+                        width: 24
+                        height: 24
+                        checked: parent.isProficiencySelected
+                        visible: parent.isAvaliableProficiency
+                        enabled: parent.isProficiencySelected || skillTable.selectedProficiencySkillCount < skillTable.avaliableProficiencySkillCount
+
+                        onCheckedChanged: {
+                            skillTable.selectedProficiencySkillCount += checked ? 1 : -1
+                            skillTable.model.setProperty(parent.index, "isProficiencySelected", checked)
+                        }
+                    }
                 }
 
                 function fillModel() {
                     skillTable.model.clear();
+                    skillTable.avaliableProficiencySkillCount = 0;
+                    skillTable.selectedProficiencySkillCount = 0;
 
-                    if (attributeTable.model.count === 0) {
+                    if (attributeTable.model.count === 0 ||
+                        classSelector.model.empty || classSelector.currentIndex === -1) {
                         return
                     }
 
                     let allSkills = backend.skills;
+                    let classData = classSelector.model.get(classSelector.currentIndex).classData
+                    skillTable.avaliableProficiencySkillCount = classData.avaliableProficiencySkillCount
+                    let avaliableProficiencySkills = classData.avaliableProficiencySkills
 
-                    for (let i = 0; i < attributeTable.model.count; i++) {
-                        var attribute = attributeTable.model.get(i)
+                    for (let skillId in allSkills) {
+                        let skill = allSkills[skillId]
 
-                        for (let skill of allSkills) {
+                        let value = undefined
+                        let isAvaliableProficiency = false
+
+                        for (let i = 0; i < attributeTable.model.count; i++) {
+                            var attribute = attributeTable.model.get(i)
+
                             if (attribute.attribute.name === skill.dependentAttribute) {
-                                let value = Math.floor((attribute.attribute.value + attribute.raceModifier + attribute.customModifier) / 2) - 5
-                                skillTable.model.append({skill: skill, value: value})
+                                value = Math.floor((attribute.attribute.value + attribute.raceModifier + attribute.customModifier) / 2) - 5
                             }
                         }
+
+                        for (let proficiencySkill of avaliableProficiencySkills) {
+                            if (proficiencySkill.name === skill.name) {
+                                isAvaliableProficiency = true
+                                break
+                            }
+                        }
+
+                        skillTable.model.append(
+                            {
+                                skill: skill,
+                                value: value,
+                                isAvaliableProficiency: isAvaliableProficiency,
+                                isProficiencySelected: false,
+                                index: skillId
+                            }
+                        )
                     }
 
                     currentIndex = 0;
@@ -328,6 +395,14 @@ Window {
                     target: attributeTable
 
                     function onDataChanged() {
+                        skillTable.fillModel();
+                    }
+                }
+
+                Connections {
+                    target: classSelector
+
+                    function onCurrentIndexChanged() {
                         skillTable.fillModel();
                     }
                 }
@@ -414,7 +489,7 @@ Window {
                 id: armorsTable
 
                 Layout.fillWidth: true
-                height: 200
+                height: 230
 
                 model: ListModel {}
                 delegate: Label {
@@ -445,6 +520,54 @@ Window {
 
                     function onCurrentIndexChanged() {
                         armorsTable.fillModel();
+                    }
+                }
+
+                Component.onCompleted: {
+                    fillModel()
+                }
+            }
+
+            Label {
+                text: "Saving throws:"
+                Layout.fillWidth: true
+            }
+
+            ListView {
+                id: savingThrowsTable
+
+                Layout.fillWidth: true
+                height: 200
+
+                model: ListModel {}
+                delegate: Label {
+                    required property string name
+
+                    text: name
+                }
+
+                function fillModel() {
+                    savingThrowsTable.model.clear();
+
+                    if (classSelector.model.empty || classSelector.currentIndex === -1) {
+                        return
+                    }
+
+                    let classData = classSelector.model.get(classSelector.currentIndex).classData
+                    let savingThrows = classData.savingThrows;
+
+                    for (let savingThrow of savingThrows) {
+                        savingThrowsTable.model.append(savingThrow)
+                    }
+
+                    currentIndex = 0;
+                }
+
+                Connections {
+                    target: classSelector
+
+                    function onCurrentIndexChanged() {
+                        savingThrowsTable.fillModel();
                     }
                 }
 
