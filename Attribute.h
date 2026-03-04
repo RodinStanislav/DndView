@@ -7,7 +7,6 @@
 namespace dnd::model {
 struct Attribute {
     std::string name;
-    int value = 0;
 };
 
 extern const char* STRENGHT_ATTRIBUTE;
@@ -17,7 +16,7 @@ extern const char* INTELLIGENCE_ATTRIBUTE;
 extern const char* WISDOM_ATTRIBUTE;
 extern const char* CHARISMA_ATTRIBUTE;
 
-std::vector<std::string> getDefaultAttributes();
+std::vector<Attribute> getDefaultAttributes();
 }
 
 #endif // ATTRIBUTE_H

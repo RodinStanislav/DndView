@@ -29,6 +29,16 @@ qt_add_qml_module(appDndView
         SOURCES Skill.h
         SOURCES Spell.h
         SOURCES Skill.cpp
+        SOURCES Class.h
+        SOURCES Class.cpp
+        SOURCES Weapon.h
+        SOURCES ArmorType.h
+        SOURCES ArmorType.cpp
+        SOURCES WeaponType.h
+        SOURCES WeaponType.cpp
+        SOURCES Armor.h
+        SOURCES Armor.cpp
+        SOURCES Weapon.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

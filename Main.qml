@@ -3,8 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Window {
-    width: 640
-    height: 480
+    width: 800
+    height: 640
     visible: true
     title: qsTr("Dnd View")
 
@@ -46,8 +46,6 @@ Window {
 
                 model: ListModel {}
                 delegate: Rectangle {
-                    id: delegate
-
                     required property var race
                     required property int index
 
@@ -77,6 +75,54 @@ Window {
                     for (let raceId in allRaces) {
                         let race = allRaces[raceId]
                         raceSelector.model.append({race: race, index: raceId})
+                    }
+
+                    currentIndex = 0;
+                }
+
+                Component.onCompleted: {
+                    fillModel()
+                }
+            }
+
+            ComboBox {
+                id: classSelector
+
+                Layout.fillWidth: true
+
+                displayText: model.get(currentIndex).classData.name
+
+                model: ListModel {}
+                delegate: Rectangle {
+                    required property var classData
+                    required property int index
+
+                    width: classSelector.width
+                    height: 20
+                    color: index % 2 == 0 ? "lightgray" : "white" // Use index for alternating colors
+
+                    Text {
+                        text: classData.name
+                        anchors.left: parent.left
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            classSelector.currentIndex = index;
+                            classSelector.popup.close()
+                        }
+                    }
+                }
+
+                function fillModel() {
+                    classSelector.model.clear();
+
+                    let allClasses = backend.classes;
+
+                    for (let classId in allClasses) {
+                        let classData = allClasses[classId]
+                        classSelector.model.append({classData: classData, index: classId})
                     }
 
                     currentIndex = 0;
@@ -117,7 +163,7 @@ Window {
                 signal dataChanged
 
                 Layout.fillWidth: true
-                height: 100
+                height: 170
 
                 model: ListModel {}
                 delegate: Rectangle {
@@ -131,6 +177,8 @@ Window {
 
                     Label {
                         anchors.left: parent.left
+                        height: 24
+                        verticalAlignment: Qt.AlignVCenter
                         text: {
                             let strValue = attribute.name + ": " + (attribute.value + customModifier)
                             if (raceModifier > 0) {
@@ -223,12 +271,12 @@ Window {
                 Component.onCompleted: {
                     fillModel()
                 }
-            }
+            }        
         }
 
         ColumnLayout {
             id: skillsPreview
-            width: 100
+            Layout.preferredWidth: 150
 
             Layout.alignment: Qt.AlignTop
 
@@ -247,6 +295,8 @@ Window {
                 delegate: Label {
                     required property var skill
                     required property int value
+
+                    width: skillTable.width
 
                     text: skill.name + ": " + value
                 }
@@ -287,61 +337,121 @@ Window {
                 }
             }
         }
-    }
 
-    Label {
-        id: charactersListLabel
-        text: "Characters:"
-        anchors.top: parent.top
-        anchors.right: parent.right
-        width: 100
-    }
-
-    ListView {
-        id: charactersList
-        anchors.top: charactersListLabel.bottom
-        anchors.right: parent.right
-
-        width: 100
-        height: 100
-        model: ListModel {}
-        delegate: Rectangle {
-
-            required property string name
-            required property var race
-
-            width: 100
-            height: 20
-            color: "lightblue"
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
 
             Label {
-                anchors.left: parent.left
-                text: name + " (" + race.name +")"
+                text: "Properties:"
+                Layout.fillWidth: true
+            }
+
+            Label {
+                text: "Avaliable weapons:"
+                Layout.fillWidth: true
+            }
+
+            ListView {
+                id: weaponsTable
+
+                Layout.fillWidth: true
+                height: 600
+
+                model: ListModel {}
+                delegate: Label {
+                    required property string name
+
+                    text: name
+                }
+
+                function fillModel() {
+                    weaponsTable.model.clear();
+
+                    if (classSelector.model.empty || classSelector.currentIndex === -1) {
+                        return
+                    }
+
+                    let classData = classSelector.model.get(classSelector.currentIndex).classData
+                    let weapons = classData.weapons;
+
+                    for (let weapon of weapons) {
+                        weaponsTable.model.append(weapon)
+                    }
+
+                    currentIndex = 0;
+                }
+
+                Connections {
+                    target: classSelector
+
+                    function onCurrentIndexChanged() {
+                        weaponsTable.fillModel();
+                    }
+                }
+
+                Component.onCompleted: {
+                    fillModel()
+                }
             }
         }
 
-        function fillModel() {
-            charactersList.model.clear();
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
 
-            let allCharacters = backend.characters;
-
-            for (let character of allCharacters) {
-                charactersList.model.append(character)
+            Label {
+                text: ""
+                Layout.fillWidth: true
             }
 
-            currentIndex = 0;
-        }
+            Label {
+                text: "Avaliable armors:"
+                Layout.fillWidth: true
+            }
 
-        Component.onCompleted: {
-            fillModel()
-        }
-    }
+            ListView {
+                id: armorsTable
 
-    Connections {
-        target: backend
+                Layout.fillWidth: true
+                height: 200
 
-        function onCharacterListChanged() {
-            charactersList.fillModel()
+                model: ListModel {}
+                delegate: Label {
+                    required property string name
+
+                    text: name
+                }
+
+                function fillModel() {
+                    armorsTable.model.clear();
+
+                    if (classSelector.model.empty || classSelector.currentIndex === -1) {
+                        return
+                    }
+
+                    let classData = classSelector.model.get(classSelector.currentIndex).classData
+                    let armors = classData.armors;
+
+                    for (let armor of armors) {
+                        armorsTable.model.append(armor)
+                    }
+
+                    currentIndex = 0;
+                }
+
+                Connections {
+                    target: classSelector
+
+                    function onCurrentIndexChanged() {
+                        armorsTable.fillModel();
+                    }
+                }
+
+                Component.onCompleted: {
+                    fillModel()
+                }
+            }
         }
     }
 }

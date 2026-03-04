@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "Attribute.h"
 
@@ -10,7 +11,7 @@ namespace dnd::model {
 
 struct Race {
     std::string name;
-    std::vector<Attribute> attributeModifiers;
+    std::unordered_map<std::string, uint32_t> attributeModifiers;
 };
 
 std::vector<Race> getDefaultRaces();

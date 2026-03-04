@@ -4,72 +4,72 @@ namespace dnd::model {
 std::vector<Race> getDefaultRaces() {
     Race rockGnome;
     rockGnome.name = "Rock gnome";
-    rockGnome.attributeModifiers.push_back(Attribute{INTELLIGENCE_ATTRIBUTE, 2});
-    rockGnome.attributeModifiers.push_back(Attribute{CONSTITUTION_ATTRIBUTE, 1});
+    rockGnome.attributeModifiers[INTELLIGENCE_ATTRIBUTE] = 2;
+    rockGnome.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 1;
 
     Race forestGnome;
     forestGnome.name = "Forest gnome";
-    forestGnome.attributeModifiers.push_back(Attribute{INTELLIGENCE_ATTRIBUTE, 2});
-    forestGnome.attributeModifiers.push_back(Attribute{DEXTERITY_ATTRIBUTE, 1});
+    forestGnome.attributeModifiers[INTELLIGENCE_ATTRIBUTE] = 2;
+    forestGnome.attributeModifiers[DEXTERITY_ATTRIBUTE] = 1;
 
     Race hillDwarf;
     hillDwarf.name = "Hill dwarf";
-    hillDwarf.attributeModifiers.push_back(Attribute{CONSTITUTION_ATTRIBUTE, 2});
-    hillDwarf.attributeModifiers.push_back(Attribute{STRENGHT_ATTRIBUTE, 2});
+    hillDwarf.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 2;
+    hillDwarf.attributeModifiers[STRENGHT_ATTRIBUTE] = 2;
 
     Race rockDwarf;
     rockDwarf.name = "Rock dwarf";
-    rockDwarf.attributeModifiers.push_back(Attribute{CONSTITUTION_ATTRIBUTE, 2});
-    rockDwarf.attributeModifiers.push_back(Attribute{WISDOM_ATTRIBUTE, 1});
+    rockDwarf.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 2;
+    rockDwarf.attributeModifiers[WISDOM_ATTRIBUTE] = 1;
 
     Race dragonborn;
     dragonborn.name = "Dragonborn";
-    dragonborn.attributeModifiers.push_back(Attribute{STRENGHT_ATTRIBUTE, 2});
-    dragonborn.attributeModifiers.push_back(Attribute{WISDOM_ATTRIBUTE, 1});
+    dragonborn.attributeModifiers[STRENGHT_ATTRIBUTE] = 2;
+    dragonborn.attributeModifiers[WISDOM_ATTRIBUTE] = 1;
 
     Race halfOrc;
     halfOrc.name = "Half-orc";
-    halfOrc.attributeModifiers.push_back(Attribute{STRENGHT_ATTRIBUTE, 2});
-    halfOrc.attributeModifiers.push_back(Attribute{CONSTITUTION_ATTRIBUTE, 1});
+    halfOrc.attributeModifiers[STRENGHT_ATTRIBUTE] = 2;
+    halfOrc.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 1;
 
     Race halfElf;
     halfElf.name = "Half-elf";
-    halfElf.attributeModifiers.push_back(Attribute{CHARISMA_ATTRIBUTE, 2});
-    halfElf.attributeModifiers.push_back(Attribute{CONSTITUTION_ATTRIBUTE, 1});
+    halfElf.attributeModifiers[CHARISMA_ATTRIBUTE] = 2;
+    halfElf.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 1;
 
     Race stoutHalfling;
     stoutHalfling.name = "Stout halfing";
-    stoutHalfling.attributeModifiers.push_back(Attribute{DEXTERITY_ATTRIBUTE, 2});
-    stoutHalfling.attributeModifiers.push_back(Attribute{CONSTITUTION_ATTRIBUTE, 1});
+    stoutHalfling.attributeModifiers[DEXTERITY_ATTRIBUTE] = 2;
+    stoutHalfling.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 1;
 
     Race lightfootHalfling;
     lightfootHalfling.name = "Lightfoot halfing";
-    lightfootHalfling.attributeModifiers.push_back(Attribute{DEXTERITY_ATTRIBUTE, 2});
-    lightfootHalfling.attributeModifiers.push_back(Attribute{CHARISMA_ATTRIBUTE, 1});
+    lightfootHalfling.attributeModifiers[DEXTERITY_ATTRIBUTE] = 2;
+    lightfootHalfling.attributeModifiers[CHARISMA_ATTRIBUTE] = 1;
 
     Race tiefling;
     tiefling.name = "Tiefling";
-    tiefling.attributeModifiers.push_back(Attribute{CHARISMA_ATTRIBUTE, 2});
-    tiefling.attributeModifiers.push_back(Attribute{INTELLIGENCE_ATTRIBUTE, 1});
+    tiefling.attributeModifiers[CHARISMA_ATTRIBUTE] = 2;
+    tiefling.attributeModifiers[INTELLIGENCE_ATTRIBUTE] = 1;
 
     Race human;
     human.name = "Human";
-    human.attributeModifiers.push_back(Attribute{STRENGHT_ATTRIBUTE, 1});
-    human.attributeModifiers.push_back(Attribute{DEXTERITY_ATTRIBUTE, 1});
-    human.attributeModifiers.push_back(Attribute{CONSTITUTION_ATTRIBUTE, 1});
-    human.attributeModifiers.push_back(Attribute{INTELLIGENCE_ATTRIBUTE, 1});
-    human.attributeModifiers.push_back(Attribute{CHARISMA_ATTRIBUTE, 1});
-    human.attributeModifiers.push_back(Attribute{WISDOM_ATTRIBUTE, 1});
+    human.attributeModifiers[STRENGHT_ATTRIBUTE] = 1;
+    human.attributeModifiers[DEXTERITY_ATTRIBUTE] = 1;
+    human.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 1;
+    human.attributeModifiers[INTELLIGENCE_ATTRIBUTE] = 1;
+    human.attributeModifiers[CHARISMA_ATTRIBUTE] = 1;
+    human.attributeModifiers[WISDOM_ATTRIBUTE] = 1;
 
     Race highElf;
     highElf.name = "High elf";
-    highElf.attributeModifiers.push_back(Attribute{DEXTERITY_ATTRIBUTE, 2});
-    highElf.attributeModifiers.push_back(Attribute{INTELLIGENCE_ATTRIBUTE, 1});
+    highElf.attributeModifiers[DEXTERITY_ATTRIBUTE] = 2;
+    highElf.attributeModifiers[INTELLIGENCE_ATTRIBUTE] = 1;
 
     Race forestElf;
     forestElf.name = "Forest elf";
-    forestElf.attributeModifiers.push_back(Attribute{DEXTERITY_ATTRIBUTE, 2});
-    forestElf.attributeModifiers.push_back(Attribute{WISDOM_ATTRIBUTE, 1});
+    forestElf.attributeModifiers[DEXTERITY_ATTRIBUTE] = 2;
+    forestElf.attributeModifiers[WISDOM_ATTRIBUTE] = 1;
 
     std::vector<Race> races;
     races.push_back(rockGnome);

@@ -23,10 +23,99 @@ public:
     }
 
     Q_INVOKABLE int getValue() const {
-        return data.value;
+        return value;
     }
 
     dnd::model::Attribute data;
+    int value = 0;
+};
+
+class Armor {
+    Q_GADGET
+
+    Q_PROPERTY(QString name READ getName CONSTANT FINAL)
+public:
+    Q_INVOKABLE QString getName() const {
+        return QString::fromStdString(data.name);
+    }
+
+    dnd::model::Armor data;
+};
+
+class Weapon {
+    Q_GADGET
+
+    Q_PROPERTY(QString name READ getName CONSTANT FINAL)
+public:
+    Q_INVOKABLE QString getName() const {
+        return QString::fromStdString(data.name);
+    }
+
+    dnd::model::Weapon data;
+};
+
+class Class {
+    Q_GADGET
+
+    Q_PROPERTY(QString name READ getName CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Armor> armors READ getArmors CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Weapon> weapons READ getWeapons CONSTANT FINAL)
+
+public:
+    Q_INVOKABLE QString getName() const {
+        return QString::fromStdString(data.name);
+    }
+
+    Q_INVOKABLE QVector<dnd::view::Armor> getArmors() const {
+        QVector<dnd::view::Armor> armors;
+
+        for (const auto& armorTypeName : data.armorTypes) {
+            for (const auto& armor : project->armors) {
+                if (armor.armorType == armorTypeName) {
+                    armors.emplace_back();
+                    armors.back().data = *std::find_if(project->armors.begin(), project->armors.end(), [&](const model::Armor& armorValue) {
+                        return armor.name == armorValue.name;
+                    });
+                }
+            }
+        }
+
+        for (const auto& armorName : data.armors) {
+            armors.emplace_back();
+            armors.back().data = *std::find_if(project->armors.begin(), project->armors.end(), [&](const model::Armor& armor) {
+                return armor.name == armorName;
+            });
+        }
+
+        return armors;
+    }
+
+    Q_INVOKABLE QVector<dnd::view::Weapon> getWeapons() const {
+        QVector<dnd::view::Weapon> weapons;
+
+        for (const auto& weaponTypeName : data.weaponTypes) {
+            for (const auto& weapon : project->weapons) {
+                if (weapon.weaponType == weaponTypeName) {
+                    weapons.emplace_back();
+                    weapons.back().data = *std::find_if(project->weapons.begin(), project->weapons.end(), [&](const model::Weapon& weaponValue) {
+                        return weapon.name == weaponValue.name;
+                    });
+                }
+            }
+        }
+
+        for (const auto& weaponName : data.weapons) {
+            weapons.emplace_back();
+            weapons.back().data = *std::find_if(project->weapons.begin(), project->weapons.end(), [&](const model::Weapon& weapon) {
+                return weapon.name == weaponName;
+            });
+        }
+
+        return weapons;
+    }
+
+    model::Project const* project;
+    dnd::model::Class data;
 };
 
 class Skill {
@@ -42,6 +131,7 @@ public:
     Q_INVOKABLE QString getDependentAttribute() const {
         return QString::fromStdString(data.dependentAttribute);
     }
+
 
     dnd::model::Skill data;
 };
@@ -59,14 +149,18 @@ public:
     Q_INVOKABLE QVector<dnd::view::Attribute> getAttributeModifiers() const {
         QVector<dnd::view::Attribute> attributeModifiers;
 
-        for (const auto& attribute : data.attributeModifiers) {
+        for (const auto& [attributeName, value] : data.attributeModifiers) {
             attributeModifiers.emplace_back();
-            attributeModifiers.back().data = attribute;
+            attributeModifiers.back().data = *std::find_if(project->attributes.begin(), project->attributes.end(), [&](const model::Attribute& attribute) {
+                return attribute.name == attributeName;
+            });
+            attributeModifiers.back().value = value;
         }
 
         return attributeModifiers;
     }
 
+    model::Project const* project;
     dnd::model::Race data;
 };
 
@@ -102,6 +196,9 @@ class Backend : public QObject {
     Q_PROPERTY(QVector<dnd::view::Character> characters READ getAllCharacters CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Attribute> attributes READ getAllAttributes CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Skill> skills READ getAllSkills CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Class> classes READ getAllClasses CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Armor> armors READ getAllArmors CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Weapon> weapons READ getAllWeapons CONSTANT FINAL)
 
 public:
 
@@ -115,6 +212,7 @@ public slots:
         auto iterator = data.begin();
         for (const auto& race : project.races) {
             iterator->data = race;
+            iterator->project = &project;
             iterator++;
         }
 
@@ -137,7 +235,8 @@ public slots:
 
         for (auto& attribute : project.attributes) {
             attributes.emplace_back();
-            attributes.back().data = model::Attribute {attribute, 8};
+            attributes.back().data = attribute;
+            attributes.back().value = 8;
         }
 
         return attributes;
@@ -154,6 +253,40 @@ public slots:
         return skills;
     }
 
+    Q_INVOKABLE QVector<dnd::view::Class> getAllClasses() const {
+        QVector<dnd::view::Class> classes;
+
+        for (auto& classData : project.classes) {
+            classes.emplace_back();
+            classes.back().data = classData;
+            classes.back().project = &project;
+        }
+
+        return classes;
+    }
+
+    Q_INVOKABLE QVector<dnd::view::Armor> getAllArmors() const {
+        QVector<dnd::view::Armor> armors;
+
+        for (auto& armor : project.armors) {
+            armors.emplace_back();
+            armors.back().data = armor;
+        }
+
+        return armors;
+    }
+
+    Q_INVOKABLE QVector<dnd::view::Weapon> getAllWeapons() const {
+        QVector<dnd::view::Weapon> weapons;
+
+        for (auto& weapon : project.weapons) {
+            weapons.emplace_back();
+            weapons.back().data = weapon;
+        }
+
+        return weapons;
+    }
+
     Q_INVOKABLE void createCharacter(const QString& name, const QString& raceName) {
         dnd::model::Character newCharacter;
         auto allRaces = dnd::model::getDefaultRaces();
@@ -161,7 +294,7 @@ public slots:
         newCharacter.race = raceName.toStdString();
 
         for (auto& attributeName : project.attributes) {
-            newCharacter.attributes.emplace_back(model::Attribute{attributeName, 8});
+            newCharacter.attributes[attributeName.name] = 8;
         }
 
         project.characters.push_back(newCharacter);
@@ -176,6 +309,11 @@ public slots:
             project.races = model::getDefaultRaces();
             project.attributes = model::getDefaultAttributes();
             project.skills = model::getDefaultSkills();
+            project.classes = model::getDefaultClasses();
+            project.armorTypes = model::getDefaultArmorTypes();
+            project.weaponTypes = model::getDefaultWeaponTypes();
+            project.armors = model::getDefaultArmors();
+            project.weapons = model::getDefaultWeapons();
 
             return;
         }

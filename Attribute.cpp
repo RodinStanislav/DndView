@@ -8,15 +8,15 @@ const char* INTELLIGENCE_ATTRIBUTE = "Intelligence";
 const char* WISDOM_ATTRIBUTE = "Wisdom";
 const char* CHARISMA_ATTRIBUTE = "Charisma";
 
-std::vector<std::string> getDefaultAttributes() {
-    std::vector<std::string> attributes;
+std::vector<Attribute> getDefaultAttributes() {
+    std::vector<Attribute> attributes;
 
-    attributes.emplace_back(STRENGHT_ATTRIBUTE);
-    attributes.emplace_back(DEXTERITY_ATTRIBUTE);
-    attributes.emplace_back(CONSTITUTION_ATTRIBUTE);
-    attributes.emplace_back(INTELLIGENCE_ATTRIBUTE);
-    attributes.emplace_back(WISDOM_ATTRIBUTE);
-    attributes.emplace_back(CHARISMA_ATTRIBUTE);
+    attributes.emplace_back(Attribute{STRENGHT_ATTRIBUTE});
+    attributes.emplace_back(Attribute{DEXTERITY_ATTRIBUTE});
+    attributes.emplace_back(Attribute{CONSTITUTION_ATTRIBUTE});
+    attributes.emplace_back(Attribute{INTELLIGENCE_ATTRIBUTE});
+    attributes.emplace_back(Attribute{WISDOM_ATTRIBUTE});
+    attributes.emplace_back(Attribute{CHARISMA_ATTRIBUTE});
 
     return attributes;
 }

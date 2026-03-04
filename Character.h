@@ -3,13 +3,15 @@
 
 #include "Race.h"
 #include "Attribute.h"
+#include <unordered_map>
 
 namespace dnd::model {
 
 struct Character {
     std::string name;
     std::string race;
-    std::vector<Attribute> attributes;
+    std::unordered_map<std::string, uint32_t> classes;
+    std::unordered_map<std::string, uint32_t> attributes;
 };
 
 }
