@@ -71,6 +71,18 @@ public:
     dnd::model::Weapon data;
 };
 
+class Spell {
+    Q_GADGET
+
+    Q_PROPERTY(QString name READ getName CONSTANT FINAL)
+public:
+    Q_INVOKABLE QString getName() const {
+        return QString::fromStdString(data.name);
+    }
+
+    dnd::model::Spell data;
+};
+
 class Class {
     Q_GADGET
 
@@ -79,7 +91,7 @@ class Class {
     Q_PROPERTY(QVector<dnd::view::Weapon> weapons READ getWeapons CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Attribute> savingThrows READ getSavingThrows CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Skill> avaliableProficiencySkills READ getAvaliableProficiencySkills CONSTANT FINAL)
-    Q_PROPERTY(int avaliableProficiencySkillCount READ getAvaliableProficiencySkillCount CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Spell> spells READ getSpells CONSTANT FINAL)
 
 public:
     Q_INVOKABLE QString getName() const {
@@ -150,7 +162,7 @@ public:
     Q_INVOKABLE QVector<dnd::view::Skill> getAvaliableProficiencySkills() const {
         QVector<dnd::view::Skill> avaliableProficiencySkills;
 
-        for (const auto& proficiencySkill : data.avaliableProficiencySkills) {
+        for (const auto& proficiencySkill : data.proficiencySkills) {
             avaliableProficiencySkills.emplace_back();
             avaliableProficiencySkills.back().data = *std::find_if(project->skills.begin(), project->skills.end(), [&](const model::Skill& skill) {
                 return skill.name == proficiencySkill;
@@ -160,8 +172,17 @@ public:
         return avaliableProficiencySkills;
     }
 
-    Q_INVOKABLE int getAvaliableProficiencySkillCount() const {
-        return data.avaliableProficiencySkillCount;
+    Q_INVOKABLE QVector<dnd::view::Spell> getSpells() const {
+        QVector<dnd::view::Spell> spells;
+
+        for (const auto& spellName : data.spells) {
+            spells.emplace_back();
+            spells.back().data = *std::find_if(project->spells.begin(), project->spells.end(), [&](const model::Spell& spell) {
+                return spell.name == spellName;
+            });
+        }
+
+        return spells;
     }
 
     model::Project const* project;
@@ -179,17 +200,47 @@ public:
     }
 
     Q_INVOKABLE QVector<dnd::view::Attribute> getAttributeModifiers() const {
-        QVector<dnd::view::Attribute> attributeModifiers;
+        QMap<QString, dnd::view::Attribute> attributeModifiers;
+        std::unordered_map<std::string, dnd::model::Attribute> attributes;
 
-        for (const auto& [attributeName, value] : data.attributeModifiers) {
-            attributeModifiers.emplace_back();
-            attributeModifiers.back().data = *std::find_if(project->attributes.begin(), project->attributes.end(), [&](const model::Attribute& attribute) {
-                return attribute.name == attributeName;
+        if (data.inherits.has_value()) {
+            auto baseRace = *std::find_if(project->races.begin(), project->races.end(), [&](const model::Race& race) {
+                return race.name == *data.inherits;
             });
-            attributeModifiers.back().value = value;
+
+            for (const auto& [attributeName, value] : baseRace.attributeModifiers) {
+                auto& attributeModifier = attributeModifiers[QString::fromStdString(attributeName)];
+                attributes[attributeName] = *std::find_if(project->attributes.begin(), project->attributes.end(), [&](const model::Attribute& attribute) {
+                    return attribute.name == attributeName;
+                });
+                attributeModifier.data = attributes[attributeName];
+                attributeModifier.value = value;
+            }
         }
 
-        return attributeModifiers;
+        for (const auto& [attributeName, value] : data.attributeModifiers) {
+            auto attributeNameStr = QString::fromStdString(attributeName);
+            if (attributeModifiers.contains(attributeNameStr)) {
+                attributeModifiers[attributeNameStr].value += value;
+                continue;
+            }
+
+            auto& attributeModifier = attributeModifiers[attributeNameStr];
+            if (attributes.count(attributeName)) {
+                attributeModifier.data = attributes[attributeName];
+            }
+            else {
+                attributeModifier.data = *std::find_if(project->attributes.begin(), project->attributes.end(), [&](const model::Attribute& attribute) {
+                    return attribute.name == attributeName;
+                });
+            }
+
+            attributeModifier.value = value;
+        }
+
+        auto vector = QVector<dnd::view::Attribute>(attributeModifiers.begin(), attributeModifiers.end());
+
+        return vector;
     }
 
     model::Project const* project;
@@ -221,10 +272,9 @@ public:
     dnd::model::Character data;
 };
 
-class Backend : public QObject {
+class Project : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(QVector<dnd::view::Race> races READ getAllRaces CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Character> characters READ getAllCharacters CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Attribute> attributes READ getAllAttributes CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Skill> skills READ getAllSkills CONSTANT FINAL)
@@ -234,7 +284,7 @@ class Backend : public QObject {
 
 public:
 
-    ~Backend() {
+    ~Project() {
         saveProject();
     }
 
@@ -246,6 +296,36 @@ public slots:
             iterator->data = race;
             iterator->project = &project;
             iterator++;
+        }
+
+        return data;
+    }
+
+    Q_INVOKABLE QVector<dnd::view::Race> getBaseRaces() const {
+        QVector<dnd::view::Race> data;
+        for (const auto& race : project.races) {
+            if (!race.inherits.has_value()) {
+                data.emplace_back();
+                data.back().data = race;
+                data.back().project = &project;
+            }
+        }
+
+        return data;
+    }
+
+    Q_INVOKABLE QVector<dnd::view::Race> getInheritedRaces(const QString& baseRace) const {
+        QVector<dnd::view::Race> data;
+        for (const auto& race : project.races) {
+            if (!race.inherits.has_value()) {
+                continue;
+            }
+
+            if (baseRace.toStdString() == race.inherits.value()) {
+                data.emplace_back();
+                data.back().data = race;
+                data.back().project = &project;
+            }
         }
 
         return data;
@@ -346,6 +426,8 @@ public slots:
             project.weaponTypes = model::getDefaultWeaponTypes();
             project.armors = model::getDefaultArmors();
             project.weapons = model::getDefaultWeapons();
+            project.spellSchools = model::getDefaultSpellSchools();
+            project.spells = model::getDefaultSpells();
 
             return;
         }

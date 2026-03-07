@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace dnd::model {
 struct Class {
@@ -11,8 +12,8 @@ struct Class {
     std::vector<std::string> armors;
     std::vector<std::string> weaponTypes;
     std::vector<std::string> weapons;
-    uint32_t avaliableProficiencySkillCount = 0;
-    std::vector<std::string> avaliableProficiencySkills;
+    std::vector<std::string> proficiencySkills;
+    std::vector<std::string> spells;
     std::vector<std::string> savingThrows;
     uint32_t hitPoints;
 };

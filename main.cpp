@@ -16,10 +16,10 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
 
-    dnd::view::Backend backend;
-    backend.loadProject();
+    dnd::view::Project project;
+    project.loadProject();
 
-    engine.rootContext()->setContextProperty("backend", &backend);
+    engine.rootContext()->setContextProperty("backend", &project);
 
     engine.loadFromModule("DndView", "Main");
 

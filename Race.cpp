@@ -1,25 +1,35 @@
 #include "Race.h"
 
+#include <assert.h>
+
 namespace dnd::model {
 std::vector<Race> getDefaultRaces() {
+    Race gnome;
+    gnome.name = "Gnome";
+    gnome.attributeModifiers[INTELLIGENCE_ATTRIBUTE] = 2;
+
     Race rockGnome;
     rockGnome.name = "Rock gnome";
-    rockGnome.attributeModifiers[INTELLIGENCE_ATTRIBUTE] = 2;
+    rockGnome.inherits = gnome.name;
     rockGnome.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 1;
 
     Race forestGnome;
     forestGnome.name = "Forest gnome";
-    forestGnome.attributeModifiers[INTELLIGENCE_ATTRIBUTE] = 2;
+    forestGnome.inherits = gnome.name;
     forestGnome.attributeModifiers[DEXTERITY_ATTRIBUTE] = 1;
+
+    Race dwarf;
+    dwarf.name = "Dwarf";
+    dwarf.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 2;
 
     Race hillDwarf;
     hillDwarf.name = "Hill dwarf";
-    hillDwarf.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 2;
+    hillDwarf.inherits = dwarf.name;
     hillDwarf.attributeModifiers[STRENGHT_ATTRIBUTE] = 2;
 
     Race rockDwarf;
     rockDwarf.name = "Rock dwarf";
-    rockDwarf.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 2;
+    rockDwarf.inherits = dwarf.name;
     rockDwarf.attributeModifiers[WISDOM_ATTRIBUTE] = 1;
 
     Race dragonborn;
@@ -37,14 +47,18 @@ std::vector<Race> getDefaultRaces() {
     halfElf.attributeModifiers[CHARISMA_ATTRIBUTE] = 2;
     halfElf.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 1;
 
+    Race halfling;
+    halfling.name = "Halfling";
+    halfling.attributeModifiers[DEXTERITY_ATTRIBUTE] = 2;
+
     Race stoutHalfling;
     stoutHalfling.name = "Stout halfing";
-    stoutHalfling.attributeModifiers[DEXTERITY_ATTRIBUTE] = 2;
+    stoutHalfling.inherits = halfling.name;
     stoutHalfling.attributeModifiers[CONSTITUTION_ATTRIBUTE] = 1;
 
     Race lightfootHalfling;
     lightfootHalfling.name = "Lightfoot halfing";
-    lightfootHalfling.attributeModifiers[DEXTERITY_ATTRIBUTE] = 2;
+    lightfootHalfling.inherits = halfling.name;
     lightfootHalfling.attributeModifiers[CHARISMA_ATTRIBUTE] = 1;
 
     Race tiefling;
@@ -61,25 +75,33 @@ std::vector<Race> getDefaultRaces() {
     human.attributeModifiers[CHARISMA_ATTRIBUTE] = 1;
     human.attributeModifiers[WISDOM_ATTRIBUTE] = 1;
 
+    Race elf;
+    elf.name = "Elf";
+    elf.attributeModifiers[DEXTERITY_ATTRIBUTE] = 2;
+
     Race highElf;
     highElf.name = "High elf";
-    highElf.attributeModifiers[DEXTERITY_ATTRIBUTE] = 2;
+    highElf.inherits = elf.name;
     highElf.attributeModifiers[INTELLIGENCE_ATTRIBUTE] = 1;
 
     Race forestElf;
     forestElf.name = "Forest elf";
-    forestElf.attributeModifiers[DEXTERITY_ATTRIBUTE] = 2;
+    forestElf.inherits = elf.name;
     forestElf.attributeModifiers[WISDOM_ATTRIBUTE] = 1;
 
     std::vector<Race> races;
+    races.push_back(gnome);
     races.push_back(rockGnome);
     races.push_back(forestGnome);
+    races.push_back(elf);
     races.push_back(highElf);
     races.push_back(forestElf);
+    races.push_back(dwarf);
     races.push_back(hillDwarf);
     races.push_back(rockDwarf);
     races.push_back(dragonborn);
     races.push_back(halfOrc);
+    races.push_back(halfling);
     races.push_back(stoutHalfling);
     races.push_back(lightfootHalfling);
     races.push_back(tiefling);

@@ -1,10 +1,10 @@
 #include "Class.h"
-#include "Armor.h"
 #include "ArmorType.h"
 #include "Weapon.h"
 #include "WeaponType.h"
 #include "Attribute.h"
 #include "Skill.h"
+#include "Spell.h"
 
 namespace dnd::model {
 const char* BARD_CLASS = "Bard";
@@ -41,25 +41,36 @@ std::vector<Class> getDefaultClasses() {
     bard.savingThrows.push_back(DEXTERITY_ATTRIBUTE);
     bard.savingThrows.push_back(CHARISMA_ATTRIBUTE);
 
-    bard.avaliableProficiencySkillCount = 3;
-    bard.avaliableProficiencySkills.push_back(ATLETICS_SKILL);
-    bard.avaliableProficiencySkills.push_back(ACROBATICS_SKILL);
-    bard.avaliableProficiencySkills.push_back(SLEIGHT_OF_HAND_SKILL);
-    bard.avaliableProficiencySkills.push_back(STEALTH_SKILL);
-    bard.avaliableProficiencySkills.push_back(HISTORY_SKILL);
-    bard.avaliableProficiencySkills.push_back(MAGIC_SKILL);
-    bard.avaliableProficiencySkills.push_back(NATURE_SKILL);
-    bard.avaliableProficiencySkills.push_back(INVESTIGATION_SKILL);
-    bard.avaliableProficiencySkills.push_back(RELIGION_SKILL);
-    bard.avaliableProficiencySkills.push_back(PERCEPTION_SKILL);
-    bard.avaliableProficiencySkills.push_back(SURVIVAL_SKILL);
-    bard.avaliableProficiencySkills.push_back(MEDICINE_SKILL);
-    bard.avaliableProficiencySkills.push_back(INSIGHT_SKILL);
-    bard.avaliableProficiencySkills.push_back(ANIMAL_CARE_SKILL);
-    bard.avaliableProficiencySkills.push_back(PERFOMANCE_SKILL);
-    bard.avaliableProficiencySkills.push_back(INTIMIDATION_SKILL);
-    bard.avaliableProficiencySkills.push_back(DECEPTION_SKILL);
-    bard.avaliableProficiencySkills.push_back(PERSUASION_SKILL);
+    bard.proficiencySkills.push_back(ATLETICS_SKILL);
+    bard.proficiencySkills.push_back(ACROBATICS_SKILL);
+    bard.proficiencySkills.push_back(SLEIGHT_OF_HAND_SKILL);
+    bard.proficiencySkills.push_back(STEALTH_SKILL);
+    bard.proficiencySkills.push_back(HISTORY_SKILL);
+    bard.proficiencySkills.push_back(MAGIC_SKILL);
+    bard.proficiencySkills.push_back(NATURE_SKILL);
+    bard.proficiencySkills.push_back(INVESTIGATION_SKILL);
+    bard.proficiencySkills.push_back(RELIGION_SKILL);
+    bard.proficiencySkills.push_back(PERCEPTION_SKILL);
+    bard.proficiencySkills.push_back(SURVIVAL_SKILL);
+    bard.proficiencySkills.push_back(MEDICINE_SKILL);
+    bard.proficiencySkills.push_back(INSIGHT_SKILL);
+    bard.proficiencySkills.push_back(ANIMAL_CARE_SKILL);
+    bard.proficiencySkills.push_back(PERFOMANCE_SKILL);
+    bard.proficiencySkills.push_back(INTIMIDATION_SKILL);
+    bard.proficiencySkills.push_back(DECEPTION_SKILL);
+    bard.proficiencySkills.push_back(PERSUASION_SKILL);
+
+    bard.spells.push_back(MAGE_HAND_SPELL);
+    bard.spells.push_back(FRIENDS_SPELL);
+    bard.spells.push_back(BLADE_WARD_SPELL);
+    bard.spells.push_back(VICIOUS_MOCKERY_SPELL);
+    bard.spells.push_back(MINOR_ILLUSION_SPELL);
+    bard.spells.push_back(TRUE_STRIKE_SPELL);
+    bard.spells.push_back(DANCING_LIGHTS_SPELL);
+    bard.spells.push_back(MENDING_SPELL);
+    bard.spells.push_back(LIGHT_SPELL);
+    bard.spells.push_back(MESSAGE_SPELL);
+    bard.spells.push_back(PRESTIDIGITATION_SPELL);
 
     Class barbarian;
     barbarian.name = BARBARIAN_CLASS;
@@ -77,13 +88,13 @@ std::vector<Class> getDefaultClasses() {
     barbarian.savingThrows.push_back(STRENGHT_ATTRIBUTE);
     barbarian.savingThrows.push_back(CONSTITUTION_ATTRIBUTE);
 
-    barbarian.avaliableProficiencySkillCount = 2;
-    barbarian.avaliableProficiencySkills.push_back(ATLETICS_SKILL);
-    barbarian.avaliableProficiencySkills.push_back(PERCEPTION_SKILL);
-    barbarian.avaliableProficiencySkills.push_back(SURVIVAL_SKILL);
-    barbarian.avaliableProficiencySkills.push_back(INTIMIDATION_SKILL);
-    barbarian.avaliableProficiencySkills.push_back(NATURE_SKILL);
-    barbarian.avaliableProficiencySkills.push_back(ANIMAL_CARE_SKILL);
+    barbarian.proficiencySkills.push_back(ATLETICS_SKILL);
+    barbarian.proficiencySkills.push_back(PERCEPTION_SKILL);
+    barbarian.proficiencySkills.push_back(SURVIVAL_SKILL);
+    barbarian.proficiencySkills.push_back(INTIMIDATION_SKILL);
+    barbarian.proficiencySkills.push_back(NATURE_SKILL);
+    barbarian.proficiencySkills.push_back(ANIMAL_CARE_SKILL);
+
 
     Class fighter;
     fighter.name = FIGHTER_CLASS;
@@ -102,15 +113,14 @@ std::vector<Class> getDefaultClasses() {
     fighter.savingThrows.push_back(STRENGHT_ATTRIBUTE);
     fighter.savingThrows.push_back(CONSTITUTION_ATTRIBUTE);
 
-    fighter.avaliableProficiencySkillCount = 2;
-    fighter.avaliableProficiencySkills.push_back(ACROBATICS_SKILL);
-    fighter.avaliableProficiencySkills.push_back(ATLETICS_SKILL);
-    fighter.avaliableProficiencySkills.push_back(PERCEPTION_SKILL);
-    fighter.avaliableProficiencySkills.push_back(SURVIVAL_SKILL);
-    fighter.avaliableProficiencySkills.push_back(INTIMIDATION_SKILL);
-    fighter.avaliableProficiencySkills.push_back(HISTORY_SKILL);
-    fighter.avaliableProficiencySkills.push_back(INSIGHT_SKILL);
-    fighter.avaliableProficiencySkills.push_back(ANIMAL_CARE_SKILL);
+    fighter.proficiencySkills.push_back(ACROBATICS_SKILL);
+    fighter.proficiencySkills.push_back(ATLETICS_SKILL);
+    fighter.proficiencySkills.push_back(PERCEPTION_SKILL);
+    fighter.proficiencySkills.push_back(SURVIVAL_SKILL);
+    fighter.proficiencySkills.push_back(INTIMIDATION_SKILL);
+    fighter.proficiencySkills.push_back(HISTORY_SKILL);
+    fighter.proficiencySkills.push_back(INSIGHT_SKILL);
+    fighter.proficiencySkills.push_back(ANIMAL_CARE_SKILL);
 
     Class wizard;
     wizard.name = WIZARD_CLASS;
@@ -125,13 +135,29 @@ std::vector<Class> getDefaultClasses() {
     wizard.savingThrows.push_back(INTELLIGENCE_ATTRIBUTE);
     wizard.savingThrows.push_back(WISDOM_ATTRIBUTE);
 
-    wizard.avaliableProficiencySkillCount = 2;
-    wizard.avaliableProficiencySkills.push_back(INVESTIGATION_SKILL);
-    wizard.avaliableProficiencySkills.push_back(HISTORY_SKILL);
-    wizard.avaliableProficiencySkills.push_back(MAGIC_SKILL);
-    wizard.avaliableProficiencySkills.push_back(MEDICINE_SKILL);
-    wizard.avaliableProficiencySkills.push_back(INSIGHT_SKILL);
-    wizard.avaliableProficiencySkills.push_back(RELIGION_SKILL);
+    wizard.proficiencySkills.push_back(INVESTIGATION_SKILL);
+    wizard.proficiencySkills.push_back(HISTORY_SKILL);
+    wizard.proficiencySkills.push_back(MAGIC_SKILL);
+    wizard.proficiencySkills.push_back(MEDICINE_SKILL);
+    wizard.proficiencySkills.push_back(INSIGHT_SKILL);
+    wizard.proficiencySkills.push_back(RELIGION_SKILL);
+
+    wizard.spells.push_back(ACID_SPLASH_SPELL);
+    wizard.spells.push_back(MAGE_HAND_SPELL);
+    wizard.spells.push_back(FRIENDS_SPELL);
+    wizard.spells.push_back(BLADE_WARD_SPELL);
+    wizard.spells.push_back(CHILL_TOUCH_SPELL);
+    wizard.spells.push_back(RAY_OF_FROST_SPELL);
+    wizard.spells.push_back(MINOR_ILLUSION_SPELL);
+    wizard.spells.push_back(TRUE_STRIKE_SPELL);
+    wizard.spells.push_back(FIRE_BOLT_SPELL);
+    wizard.spells.push_back(DANCING_LIGHTS_SPELL);
+    wizard.spells.push_back(MENDING_SPELL);
+    wizard.spells.push_back(LIGHT_SPELL);
+    wizard.spells.push_back(MESSAGE_SPELL);
+    wizard.spells.push_back(PRESTIDIGITATION_SPELL);
+    wizard.spells.push_back(SHOCKING_GRASP_SPELL);
+    wizard.spells.push_back(POISON_SPRAY_SPELL);
 
     Class druid;
     druid.name = DRUID_CLASS;
@@ -155,15 +181,23 @@ std::vector<Class> getDefaultClasses() {
     druid.savingThrows.push_back(INTELLIGENCE_ATTRIBUTE);
     druid.savingThrows.push_back(WISDOM_ATTRIBUTE);
 
-    druid.avaliableProficiencySkillCount = 2;
-    druid.avaliableProficiencySkills.push_back(PERCEPTION_SKILL);
-    druid.avaliableProficiencySkills.push_back(SURVIVAL_SKILL);
-    druid.avaliableProficiencySkills.push_back(MAGIC_SKILL);
-    druid.avaliableProficiencySkills.push_back(MEDICINE_SKILL);
-    druid.avaliableProficiencySkills.push_back(ANIMAL_CARE_SKILL);
-    druid.avaliableProficiencySkills.push_back(NATURE_SKILL);
-    druid.avaliableProficiencySkills.push_back(INSIGHT_SKILL);
-    druid.avaliableProficiencySkills.push_back(RELIGION_SKILL);
+    druid.proficiencySkills.push_back(PERCEPTION_SKILL);
+    druid.proficiencySkills.push_back(SURVIVAL_SKILL);
+    druid.proficiencySkills.push_back(MAGIC_SKILL);
+    druid.proficiencySkills.push_back(MEDICINE_SKILL);
+    druid.proficiencySkills.push_back(ANIMAL_CARE_SKILL);
+    druid.proficiencySkills.push_back(NATURE_SKILL);
+    druid.proficiencySkills.push_back(INSIGHT_SKILL);
+    druid.proficiencySkills.push_back(RELIGION_SKILL);
+
+    druid.spells.push_back(SHILLELAGH_SPELL);
+    druid.spells.push_back(DRUIDCRAFT_SPELL);
+    druid.spells.push_back(MENDING_SPELL);
+    druid.spells.push_back(RESISTANCE_SPELL);
+    druid.spells.push_back(PRODUCE_FLAME_SPELL);
+    druid.spells.push_back(THORN_WHIP_SPELL);
+    druid.spells.push_back(GUIDANCE_SPELL);
+    druid.spells.push_back(POISON_SPRAY_SPELL);
 
     Class cleric;
     cleric.name = CLERIC_CLASS;
@@ -179,12 +213,19 @@ std::vector<Class> getDefaultClasses() {
     cleric.savingThrows.push_back(CHARISMA_ATTRIBUTE);
     cleric.savingThrows.push_back(WISDOM_ATTRIBUTE);
 
-    cleric.avaliableProficiencySkillCount = 2;
-    cleric.avaliableProficiencySkills.push_back(HISTORY_SKILL);
-    cleric.avaliableProficiencySkills.push_back(MEDICINE_SKILL);
-    cleric.avaliableProficiencySkills.push_back(INSIGHT_SKILL);
-    cleric.avaliableProficiencySkills.push_back(RELIGION_SKILL);
-    cleric.avaliableProficiencySkills.push_back(PERSUASION_SKILL);
+    cleric.proficiencySkills.push_back(HISTORY_SKILL);
+    cleric.proficiencySkills.push_back(MEDICINE_SKILL);
+    cleric.proficiencySkills.push_back(INSIGHT_SKILL);
+    cleric.proficiencySkills.push_back(RELIGION_SKILL);
+    cleric.proficiencySkills.push_back(PERSUASION_SKILL);
+
+    cleric.spells.push_back(MENDING_SPELL);
+    cleric.spells.push_back(LIGHT_SPELL);
+    cleric.spells.push_back(SACRED_FLAME_SPELL);
+    cleric.spells.push_back(RESISTANCE_SPELL);
+    cleric.spells.push_back(GUIDANCE_SPELL);
+    cleric.spells.push_back(SPARE_THE_DYING_SPELL);
+    cleric.spells.push_back(THAUMATURGY_SPELL);
 
     Class artificer;
     artificer.name = ARTIFICER_CLASS;
@@ -200,14 +241,29 @@ std::vector<Class> getDefaultClasses() {
     artificer.savingThrows.push_back(INTELLIGENCE_ATTRIBUTE);
     artificer.savingThrows.push_back(CONSTITUTION_ATTRIBUTE);
 
-    artificer.avaliableProficiencySkillCount = 2;
-    artificer.avaliableProficiencySkills.push_back(MAGIC_SKILL);
-    artificer.avaliableProficiencySkills.push_back(HISTORY_SKILL);
-    artificer.avaliableProficiencySkills.push_back(INVESTIGATION_SKILL);
-    artificer.avaliableProficiencySkills.push_back(MEDICINE_SKILL);
-    artificer.avaliableProficiencySkills.push_back(NATURE_SKILL);
-    artificer.avaliableProficiencySkills.push_back(PERCEPTION_SKILL);
-    artificer.avaliableProficiencySkills.push_back(SLEIGHT_OF_HAND_SKILL);
+    artificer.proficiencySkills.push_back(MAGIC_SKILL);
+    artificer.proficiencySkills.push_back(HISTORY_SKILL);
+    artificer.proficiencySkills.push_back(INVESTIGATION_SKILL);
+    artificer.proficiencySkills.push_back(MEDICINE_SKILL);
+    artificer.proficiencySkills.push_back(NATURE_SKILL);
+    artificer.proficiencySkills.push_back(PERCEPTION_SKILL);
+    artificer.proficiencySkills.push_back(SLEIGHT_OF_HAND_SKILL);
+
+    artificer.spells.push_back(ACID_SPLASH_SPELL);
+    artificer.spells.push_back(MAGE_HAND_SPELL);
+    artificer.spells.push_back(RAY_OF_FROST_SPELL);
+    artificer.spells.push_back(FIRE_BOLT_SPELL);
+    artificer.spells.push_back(DANCING_LIGHTS_SPELL);
+    artificer.spells.push_back(MENDING_SPELL);
+    artificer.spells.push_back(LIGHT_SPELL);
+    artificer.spells.push_back(MESSAGE_SPELL);
+    artificer.spells.push_back(RESISTANCE_SPELL);
+    artificer.spells.push_back(THORN_WHIP_SPELL);
+    artificer.spells.push_back(GUIDANCE_SPELL);
+    artificer.spells.push_back(SPARE_THE_DYING_SPELL);
+    artificer.spells.push_back(PRESTIDIGITATION_SPELL);
+    artificer.spells.push_back(SHOCKING_GRASP_SPELL);
+    artificer.spells.push_back(POISON_SPRAY_SPELL);
 
     Class warlock;
     warlock.name = WARLOCK_CLASS;
@@ -221,14 +277,23 @@ std::vector<Class> getDefaultClasses() {
     warlock.savingThrows.push_back(CHARISMA_ATTRIBUTE);
     warlock.savingThrows.push_back(WISDOM_ATTRIBUTE);
 
-    warlock.avaliableProficiencySkillCount = 2;
-    warlock.avaliableProficiencySkills.push_back(INVESTIGATION_SKILL);
-    warlock.avaliableProficiencySkills.push_back(INTIMIDATION_SKILL);
-    warlock.avaliableProficiencySkills.push_back(HISTORY_SKILL);
-    warlock.avaliableProficiencySkills.push_back(MAGIC_SKILL);
-    warlock.avaliableProficiencySkills.push_back(DECEPTION_SKILL);
-    warlock.avaliableProficiencySkills.push_back(NATURE_SKILL);
-    warlock.avaliableProficiencySkills.push_back(RELIGION_SKILL);
+    warlock.proficiencySkills.push_back(INVESTIGATION_SKILL);
+    warlock.proficiencySkills.push_back(INTIMIDATION_SKILL);
+    warlock.proficiencySkills.push_back(HISTORY_SKILL);
+    warlock.proficiencySkills.push_back(MAGIC_SKILL);
+    warlock.proficiencySkills.push_back(DECEPTION_SKILL);
+    warlock.proficiencySkills.push_back(NATURE_SKILL);
+    warlock.proficiencySkills.push_back(RELIGION_SKILL);
+
+    warlock.spells.push_back(MAGE_HAND_SPELL);
+    warlock.spells.push_back(FRIENDS_SPELL);
+    warlock.spells.push_back(BLADE_WARD_SPELL);
+    warlock.spells.push_back(CHILL_TOUCH_SPELL);
+    warlock.spells.push_back(MINOR_ILLUSION_SPELL);
+    warlock.spells.push_back(TRUE_STRIKE_SPELL);
+    warlock.spells.push_back(ELDRITCH_BLAST_SPELL);
+    warlock.spells.push_back(PRESTIDIGITATION_SPELL);
+    warlock.spells.push_back(POISON_SPRAY_SPELL);
 
     Class monk;
     monk.name = MONK_CLASS;
@@ -242,13 +307,12 @@ std::vector<Class> getDefaultClasses() {
     monk.savingThrows.push_back(STRENGHT_ATTRIBUTE);
     monk.savingThrows.push_back(DEXTERITY_ATTRIBUTE);
 
-    monk.avaliableProficiencySkillCount = 2;
-    monk.avaliableProficiencySkills.push_back(ACROBATICS_SKILL);
-    monk.avaliableProficiencySkills.push_back(ATLETICS_SKILL);
-    monk.avaliableProficiencySkills.push_back(HISTORY_SKILL);
-    monk.avaliableProficiencySkills.push_back(INSIGHT_SKILL);
-    monk.avaliableProficiencySkills.push_back(RELIGION_SKILL);
-    monk.avaliableProficiencySkills.push_back(STEALTH_SKILL);
+    monk.proficiencySkills.push_back(ACROBATICS_SKILL);
+    monk.proficiencySkills.push_back(ATLETICS_SKILL);
+    monk.proficiencySkills.push_back(HISTORY_SKILL);
+    monk.proficiencySkills.push_back(INSIGHT_SKILL);
+    monk.proficiencySkills.push_back(RELIGION_SKILL);
+    monk.proficiencySkills.push_back(STEALTH_SKILL);
 
     Class paladin;
     paladin.name = PALADIN_CLASS;
@@ -267,13 +331,12 @@ std::vector<Class> getDefaultClasses() {
     paladin.savingThrows.push_back(CHARISMA_ATTRIBUTE);
     paladin.savingThrows.push_back(WISDOM_ATTRIBUTE);
 
-    paladin.avaliableProficiencySkillCount = 2;
-    paladin.avaliableProficiencySkills.push_back(ATLETICS_SKILL);
-    paladin.avaliableProficiencySkills.push_back(INTIMIDATION_SKILL);
-    paladin.avaliableProficiencySkills.push_back(MEDICINE_SKILL);
-    paladin.avaliableProficiencySkills.push_back(INSIGHT_SKILL);
-    paladin.avaliableProficiencySkills.push_back(RELIGION_SKILL);
-    paladin.avaliableProficiencySkills.push_back(PERSUASION_SKILL);
+    paladin.proficiencySkills.push_back(ATLETICS_SKILL);
+    paladin.proficiencySkills.push_back(INTIMIDATION_SKILL);
+    paladin.proficiencySkills.push_back(MEDICINE_SKILL);
+    paladin.proficiencySkills.push_back(INSIGHT_SKILL);
+    paladin.proficiencySkills.push_back(RELIGION_SKILL);
+    paladin.proficiencySkills.push_back(PERSUASION_SKILL);
 
     Class rogue;
     rogue.name = ROGUE_CLASS;
@@ -292,18 +355,17 @@ std::vector<Class> getDefaultClasses() {
     rogue.savingThrows.push_back(INTELLIGENCE_ATTRIBUTE);
     rogue.savingThrows.push_back(DEXTERITY_ATTRIBUTE);
 
-    rogue.avaliableProficiencySkillCount = 4;
-    rogue.avaliableProficiencySkills.push_back(ACROBATICS_SKILL);
-    rogue.avaliableProficiencySkills.push_back(INVESTIGATION_SKILL);
-    rogue.avaliableProficiencySkills.push_back(ATLETICS_SKILL);
-    rogue.avaliableProficiencySkills.push_back(PERCEPTION_SKILL);
-    rogue.avaliableProficiencySkills.push_back(PERFOMANCE_SKILL);
-    rogue.avaliableProficiencySkills.push_back(INTIMIDATION_SKILL);
-    rogue.avaliableProficiencySkills.push_back(SLEIGHT_OF_HAND_SKILL);
-    rogue.avaliableProficiencySkills.push_back(DECEPTION_SKILL);
-    rogue.avaliableProficiencySkills.push_back(INSIGHT_SKILL);
-    rogue.avaliableProficiencySkills.push_back(STEALTH_SKILL);
-    rogue.avaliableProficiencySkills.push_back(PERSUASION_SKILL);
+    rogue.proficiencySkills.push_back(ACROBATICS_SKILL);
+    rogue.proficiencySkills.push_back(INVESTIGATION_SKILL);
+    rogue.proficiencySkills.push_back(ATLETICS_SKILL);
+    rogue.proficiencySkills.push_back(PERCEPTION_SKILL);
+    rogue.proficiencySkills.push_back(PERFOMANCE_SKILL);
+    rogue.proficiencySkills.push_back(INTIMIDATION_SKILL);
+    rogue.proficiencySkills.push_back(SLEIGHT_OF_HAND_SKILL);
+    rogue.proficiencySkills.push_back(DECEPTION_SKILL);
+    rogue.proficiencySkills.push_back(INSIGHT_SKILL);
+    rogue.proficiencySkills.push_back(STEALTH_SKILL);
+    rogue.proficiencySkills.push_back(PERSUASION_SKILL);
 
     Class ranger;
     ranger.name = RANGER_CLASS;
@@ -321,15 +383,14 @@ std::vector<Class> getDefaultClasses() {
     ranger.savingThrows.push_back(STRENGHT_ATTRIBUTE);
     ranger.savingThrows.push_back(DEXTERITY_ATTRIBUTE);
 
-    ranger.avaliableProficiencySkillCount = 3;
-    ranger.avaliableProficiencySkills.push_back(INVESTIGATION_SKILL);
-    ranger.avaliableProficiencySkills.push_back(ATLETICS_SKILL);
-    ranger.avaliableProficiencySkills.push_back(PERCEPTION_SKILL);
-    ranger.avaliableProficiencySkills.push_back(SURVIVAL_SKILL);
-    ranger.avaliableProficiencySkills.push_back(NATURE_SKILL);
-    ranger.avaliableProficiencySkills.push_back(INSIGHT_SKILL);
-    ranger.avaliableProficiencySkills.push_back(STEALTH_SKILL);
-    ranger.avaliableProficiencySkills.push_back(ANIMAL_CARE_SKILL);
+    ranger.proficiencySkills.push_back(INVESTIGATION_SKILL);
+    ranger.proficiencySkills.push_back(ATLETICS_SKILL);
+    ranger.proficiencySkills.push_back(PERCEPTION_SKILL);
+    ranger.proficiencySkills.push_back(SURVIVAL_SKILL);
+    ranger.proficiencySkills.push_back(NATURE_SKILL);
+    ranger.proficiencySkills.push_back(INSIGHT_SKILL);
+    ranger.proficiencySkills.push_back(STEALTH_SKILL);
+    ranger.proficiencySkills.push_back(ANIMAL_CARE_SKILL);
 
     Class sorcerer;
     sorcerer.name = SORCERER_CLASS;
@@ -344,13 +405,29 @@ std::vector<Class> getDefaultClasses() {
     sorcerer.savingThrows.push_back(CONSTITUTION_ATTRIBUTE);
     sorcerer.savingThrows.push_back(CHARISMA_ATTRIBUTE);
 
-    sorcerer.avaliableProficiencySkillCount = 2;
-    sorcerer.avaliableProficiencySkills.push_back(INTIMIDATION_SKILL);
-    sorcerer.avaliableProficiencySkills.push_back(MAGIC_SKILL);
-    sorcerer.avaliableProficiencySkills.push_back(DECEPTION_SKILL);
-    sorcerer.avaliableProficiencySkills.push_back(INSIGHT_SKILL);
-    sorcerer.avaliableProficiencySkills.push_back(RELIGION_SKILL);
-    sorcerer.avaliableProficiencySkills.push_back(PERSUASION_SKILL);
+    sorcerer.proficiencySkills.push_back(INTIMIDATION_SKILL);
+    sorcerer.proficiencySkills.push_back(MAGIC_SKILL);
+    sorcerer.proficiencySkills.push_back(DECEPTION_SKILL);
+    sorcerer.proficiencySkills.push_back(INSIGHT_SKILL);
+    sorcerer.proficiencySkills.push_back(RELIGION_SKILL);
+    sorcerer.proficiencySkills.push_back(PERSUASION_SKILL);
+
+    sorcerer.spells.push_back(ACID_SPLASH_SPELL);
+    sorcerer.spells.push_back(MAGE_HAND_SPELL);
+    sorcerer.spells.push_back(FRIENDS_SPELL);
+    sorcerer.spells.push_back(BLADE_WARD_SPELL);
+    sorcerer.spells.push_back(CHILL_TOUCH_SPELL);
+    sorcerer.spells.push_back(RAY_OF_FROST_SPELL);
+    sorcerer.spells.push_back(MINOR_ILLUSION_SPELL);
+    sorcerer.spells.push_back(TRUE_STRIKE_SPELL);
+    sorcerer.spells.push_back(FIRE_BOLT_SPELL);
+    sorcerer.spells.push_back(DANCING_LIGHTS_SPELL);
+    sorcerer.spells.push_back(MENDING_SPELL);
+    sorcerer.spells.push_back(LIGHT_SPELL);
+    sorcerer.spells.push_back(MESSAGE_SPELL);
+    sorcerer.spells.push_back(PRESTIDIGITATION_SPELL);
+    sorcerer.spells.push_back(SHOCKING_GRASP_SPELL);
+    sorcerer.spells.push_back(POISON_SPRAY_SPELL);
 
     classes.push_back(bard);
     classes.push_back(barbarian);

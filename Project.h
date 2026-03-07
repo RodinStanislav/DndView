@@ -10,6 +10,8 @@
 #include "WeaponType.h"
 #include "Armor.h"
 #include "Weapon.h"
+#include "SpellSchool.h"
+#include "Spell.h"
 
 namespace dnd::model {
 struct Project {
@@ -18,6 +20,8 @@ struct Project {
     std::vector<Weapon> weapons;
     std::vector<ArmorType> armorTypes;
     std::vector<Armor> armors;
+    std::vector<SpellSchool> spellSchools;
+    std::vector<Spell> spells;
     std::vector<Race> races;
     std::vector<Skill> skills;
     std::vector<Class> classes;

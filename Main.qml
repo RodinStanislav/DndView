@@ -3,8 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Window {
-    width: 800
-    height: 650
+    width: 1024
+    height: 800
     visible: true
     title: qsTr("Dnd View")
 
@@ -38,18 +38,26 @@ Window {
             }
 
             ComboBox {
-                id: raceSelector
+                id: baseRaceSelector
+
+                property var currentRace: {
+                    if (model.count === 0 || currentIndex === -1) {
+                        return undefined
+                    }
+
+                    return model.get(currentIndex).race
+                }
 
                 Layout.fillWidth: true
 
-                displayText: model.get(currentIndex).race.name
+                displayText: currentRace ? currentRace.name : ""
 
                 model: ListModel {}
                 delegate: Rectangle {
                     required property var race
                     required property int index
 
-                    width: raceSelector.width
+                    width: baseRaceSelector.width
                     height: 20
                     color: index % 2 == 0 ? "lightgray" : "white" // Use index for alternating colors
 
@@ -61,20 +69,20 @@ Window {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            raceSelector.currentIndex = index;
-                            raceSelector.popup.close()
+                            baseRaceSelector.currentIndex = index;
+                            baseRaceSelector.popup.close()
                         }
                     }
                 }
 
                 function fillModel() {
-                    raceSelector.model.clear();
+                    baseRaceSelector.model.clear();
 
-                    let allRaces = backend.races;
+                    let baseRaces = backend.getBaseRaces();
 
-                    for (let raceId in allRaces) {
-                        let race = allRaces[raceId]
-                        raceSelector.model.append({race: race, index: raceId})
+                    for (let raceId in baseRaces) {
+                        let race = baseRaces[raceId]
+                        baseRaceSelector.model.append({race: race, index: raceId})
                     }
 
                     currentIndex = 0;
@@ -86,7 +94,92 @@ Window {
             }
 
             ComboBox {
+                id: inheritedRaceSelector
+
+                property var currentRace: {
+                    if (model.count === 0 || currentIndex === -1) {
+                        return undefined
+                    }
+
+                    return model.get(currentIndex).race
+                }
+
+                Layout.fillWidth: true
+
+                displayText: currentRace ? currentRace.name : ""
+
+                model: ListModel {}
+
+                enabled: model.count > 0
+
+                delegate: Rectangle {
+                    required property var race
+                    required property int index
+
+                    width: inheritedRaceSelector.width
+                    height: 20
+                    color: index % 2 == 0 ? "lightgray" : "white" // Use index for alternating colors
+
+                    Text {
+                        text: race.name
+                        anchors.left: parent.left
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            inheritedRaceSelector.currentIndex = index;
+                            inheritedRaceSelector.popup.close()
+                        }
+                    }
+                }
+
+                function fillModel() {
+                    inheritedRaceSelector.model.clear();
+
+                    if (baseRaceSelector.currentRace === undefined) {
+                        return
+                    }
+
+                    let inheritedRaces = backend.getInheritedRaces(baseRaceSelector.currentRace.name);
+
+                    for (let raceId in inheritedRaces) {
+                        let race = inheritedRaces[raceId]
+                        inheritedRaceSelector.model.append({race: race, index: raceId})
+                    }
+
+                    currentIndex = 0;
+                }
+
+
+                Connections {
+                    target: baseRaceSelector
+
+                    function onCurrentRaceChanged() {
+                        inheritedRaceSelector.fillModel()
+                    }
+                }
+
+                Component.onCompleted: {
+                    fillModel()
+                }
+            }
+
+            QtObject {
+                id: raceSelector
+
+                property var currentRace: {
+                    return inheritedRaceSelector.model.count > 0 ? inheritedRaceSelector.currentRace :
+                                                                   baseRaceSelector.currentRace
+                }
+            }
+
+            ComboBox {
                 id: classSelector
+
+                property var currentClass: {
+                    return model.get(currentIndex).classData
+                }
 
                 Layout.fillWidth: true
 
@@ -141,7 +234,7 @@ Window {
                 text: "Create character"
 
                 onPressed: {
-                    backend.createCharacter(nameEdit.text, raceSelector.model.get(raceSelector.currentIndex).race.name)
+                    backend.createCharacter(nameEdit.text, raceSelector.currentRace.name)
                 }
             }
         }
@@ -225,12 +318,12 @@ Window {
                 function fillModel() {
                     attributeTable.model.clear();
 
-                    if (raceSelector.model.empty || raceSelector.currentIndex === -1) {
+                    if (raceSelector.currentRace === undefined) {
                         return
                     }
 
                     let allAttributes = backend.attributes;
-                    let race = raceSelector.model.get(raceSelector.currentIndex).race
+                    let race = raceSelector.currentRace
                     let attributeModifiers = race.attributeModifiers
 
                     for (let attributeIndex in allAttributes) {
@@ -263,7 +356,7 @@ Window {
                 Connections {
                     target: raceSelector
 
-                    function onCurrentIndexChanged() {
+                    function onCurrentRaceChanged() {
                         attributeTable.fillModel();
                     }
                 }
@@ -271,7 +364,55 @@ Window {
                 Component.onCompleted: {
                     fillModel()
                 }
-            }        
+            }
+
+            Label {
+                text: "Saving throws:"
+                Layout.fillWidth: true
+            }
+
+            ListView {
+                id: savingThrowsTable
+
+                Layout.fillWidth: true
+                height: 55
+
+                model: ListModel {}
+                delegate: Label {
+                    required property string name
+
+                    text: name
+                }
+
+                function fillModel() {
+                    savingThrowsTable.model.clear();
+
+                    if (classSelector.model.count === 0 || classSelector.currentIndex === -1) {
+                        return
+                    }
+
+                    let classData = classSelector.currentClass
+                    let savingThrows = classData.savingThrows;
+
+                    for (let savingThrow of savingThrows) {
+                        savingThrowsTable.model.append(savingThrow)
+                    }
+
+                    currentIndex = 0;
+                }
+
+                Connections {
+                    target: classSelector
+
+                    function onCurrentIndexChanged() {
+                        savingThrowsTable.fillModel();
+                    }
+                }
+
+                Component.onCompleted: {
+                    fillModel()
+                }
+            }
         }
 
         ColumnLayout {
@@ -294,9 +435,6 @@ Window {
 
             ListView {
                 id: skillTable
-
-                property int avaliableProficiencySkillCount: 0
-                property int selectedProficiencySkillCount: 0
 
                 Layout.fillWidth: true
                 height: 450
@@ -332,10 +470,8 @@ Window {
                         height: 24
                         checked: parent.isProficiencySelected
                         visible: parent.isAvaliableProficiency
-                        enabled: parent.isProficiencySelected || skillTable.selectedProficiencySkillCount < skillTable.avaliableProficiencySkillCount
 
                         onCheckedChanged: {
-                            skillTable.selectedProficiencySkillCount += checked ? 1 : -1
                             skillTable.model.setProperty(parent.index, "isProficiencySelected", checked)
                         }
                     }
@@ -343,17 +479,14 @@ Window {
 
                 function fillModel() {
                     skillTable.model.clear();
-                    skillTable.avaliableProficiencySkillCount = 0;
-                    skillTable.selectedProficiencySkillCount = 0;
 
                     if (attributeTable.model.count === 0 ||
-                        classSelector.model.empty || classSelector.currentIndex === -1) {
+                        classSelector.model.count === 0 || classSelector.currentIndex === -1) {
                         return
                     }
 
                     let allSkills = backend.skills;
-                    let classData = classSelector.model.get(classSelector.currentIndex).classData
-                    skillTable.avaliableProficiencySkillCount = classData.avaliableProficiencySkillCount
+                    let classData = classSelector.currentClass
                     let avaliableProficiencySkills = classData.avaliableProficiencySkills
 
                     for (let skillId in allSkills) {
@@ -414,7 +547,7 @@ Window {
         }
 
         ColumnLayout {
-            Layout.fillWidth: true
+            Layout.preferredWidth: 150
             Layout.alignment: Qt.AlignTop
 
             Label {
@@ -443,11 +576,11 @@ Window {
                 function fillModel() {
                     weaponsTable.model.clear();
 
-                    if (classSelector.model.empty || classSelector.currentIndex === -1) {
+                    if (classSelector.model.count === 0 || classSelector.currentIndex === -1) {
                         return
                     }
 
-                    let classData = classSelector.model.get(classSelector.currentIndex).classData
+                    let classData = classSelector.currentClass
                     let weapons = classData.weapons;
 
                     for (let weapon of weapons) {
@@ -472,7 +605,7 @@ Window {
         }
 
         ColumnLayout {
-            Layout.fillWidth: true
+            Layout.preferredWidth: 150
             Layout.alignment: Qt.AlignTop
 
             Label {
@@ -501,11 +634,11 @@ Window {
                 function fillModel() {
                     armorsTable.model.clear();
 
-                    if (classSelector.model.empty || classSelector.currentIndex === -1) {
+                    if (classSelector.model.count === 0 || classSelector.currentIndex === -1) {
                         return
                     }
 
-                    let classData = classSelector.model.get(classSelector.currentIndex).classData
+                    let classData = classSelector.currentClass
                     let armors = classData.armors;
 
                     for (let armor of armors) {
@@ -527,37 +660,65 @@ Window {
                     fillModel()
                 }
             }
+        }
+
+        ColumnLayout {
+            Layout.preferredWidth: 150
+            Layout.alignment: Qt.AlignTop
 
             Label {
-                text: "Saving throws:"
+                text: "Spells:"
                 Layout.fillWidth: true
             }
 
             ListView {
-                id: savingThrowsTable
+                id: spellsTable
 
                 Layout.fillWidth: true
-                height: 200
+                height: 400
 
                 model: ListModel {}
-                delegate: Label {
-                    required property string name
+                delegate: Rectangle {
+                    required property var spell
+                    required property bool isSelected
+                    required property int index
 
-                    text: name
+                    width: spellsTable.width
+                    height: 24
+
+                    Label {
+                        width: parent.width
+                        height: parent.height
+
+                        text: spell.name
+                    }
+
+                    CheckBox {
+                        anchors.right: parent.right
+
+                        width: height
+                        height: parent.height
+                        checked: parent.isSelected
+
+                        onCheckedChanged: {
+                            spellsTable.model.setProperty(index, "isSelected", checked)
+                        }
+                    }
                 }
 
                 function fillModel() {
-                    savingThrowsTable.model.clear();
+                    spellsTable.model.clear();
 
-                    if (classSelector.model.empty || classSelector.currentIndex === -1) {
+                    if (classSelector.model.count === 0 || classSelector.currentIndex === -1) {
                         return
                     }
 
-                    let classData = classSelector.model.get(classSelector.currentIndex).classData
-                    let savingThrows = classData.savingThrows;
+                    let classData = classSelector.currentClass
+                    let spells = classData.spells;
 
-                    for (let savingThrow of savingThrows) {
-                        savingThrowsTable.model.append(savingThrow)
+                    for (let spellId in spells) {
+                        let spell = spells[spellId]
+                        spellsTable.model.append({spell: spell, isSelected: false, index: spellId})
                     }
 
                     currentIndex = 0;
@@ -567,7 +728,7 @@ Window {
                     target: classSelector
 
                     function onCurrentIndexChanged() {
-                        savingThrowsTable.fillModel();
+                        spellsTable.fillModel();
                     }
                 }
 
