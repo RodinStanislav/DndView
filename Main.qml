@@ -1,12 +1,17 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Basic as QtQuickControls
 import QtQuick.Layouts
 
 Window {
+    id: window
     width: 1024
     height: 800
     visible: true
     title: qsTr("Dnd View")
+
+    color: "#202020"
+
+    property color textColor: "white"
 
     RowLayout {
         anchors.left: parent.left
@@ -18,16 +23,17 @@ Window {
 
         ColumnLayout {
             id: createCharacterLayout
-            width: 100
+            width: 200
 
             Layout.alignment: Qt.AlignTop
 
-            Label {
+            QtQuickControls.Label {
                 id: nameLabel
                 text: "Character name:"
+                color: window.textColor
             }
 
-            TextField {
+            OpenTextField {
                 id: nameEdit
 
                 Layout.fillWidth: true
@@ -226,7 +232,7 @@ Window {
                 }
             }
 
-            Button {
+            PrimaryButton {
                 id: createCharacterButton
 
                 Layout.fillWidth: true
@@ -245,9 +251,10 @@ Window {
 
             Layout.alignment: Qt.AlignTop
 
-            Label {
+            QtQuickControls.Label {
                 text: "Atrributes:"
                 Layout.fillWidth: true
+                color: window.textColor
             }
 
             ListView {
@@ -260,17 +267,19 @@ Window {
 
                 model: ListModel {}
                 delegate: Rectangle {
-                    width: 140
+                    width: 160
                     height: 24
+                    color: window.color
 
                     required property var attribute
                     required property int raceModifier
                     required property int customModifier
                     required property int index
 
-                    Label {
+                    QtQuickControls.Label {
                         anchors.left: parent.left
                         height: 24
+                        color: window.textColor
                         verticalAlignment: Qt.AlignVCenter
                         text: {
                             let strValue = attribute.name + ": " + (attribute.value + customModifier)
@@ -282,9 +291,11 @@ Window {
                         }
                     }
 
-                    Button {
+                    GhostButton {
                         id: minusAttributeButton
                         anchors.right: plusAttributeButton.left
+                        width: 24
+                        height: 24
                         text: "-"
 
                         enabled: {
@@ -298,15 +309,12 @@ Window {
                         }
                     }
 
-                    Button {
+                    GhostButton {
                         id: plusAttributeButton
                         anchors.right: parent.right
+                        width: 24
+                        height: 24
                         text: "+"
-
-                        enabled: {
-                            let value = attribute.value + raceModifier + customModifier
-                            return value < 30
-                        }
 
                         onPressed: {
                             attributeTable.model.setProperty(index, "customModifier", customModifier + 1)
@@ -366,9 +374,10 @@ Window {
                 }
             }
 
-            Label {
+            QtQuickControls.Label {
                 text: "Saving throws:"
                 Layout.fillWidth: true
+                color: window.textColor
             }
 
             ListView {
@@ -378,10 +387,11 @@ Window {
                 height: 55
 
                 model: ListModel {}
-                delegate: Label {
+                delegate: QtQuickControls.Label {
                     required property string name
 
                     text: name
+                    color: window.textColor
                 }
 
                 function fillModel() {
@@ -421,16 +431,18 @@ Window {
 
             Layout.alignment: Qt.AlignTop
 
-            Label {
+            QtQuickControls.Label {
                 text: "Skills:"
                 Layout.fillWidth: true
+                color: window.textColor
             }
 
-            Label {
+            QtQuickControls.Label {
                 id: proficiencyBonusLabel
                 readonly property int proficiencyBonus: 2
 
                 text: "Proficiency bonus: " + proficiencyBonus
+                color: window.textColor
             }
 
             ListView {
@@ -449,10 +461,12 @@ Window {
 
                     width: skillTable.width
                     height: 24
+                    color: window.color
 
-                    Label {
+                    QtQuickControls.Label {
                         width: skillTable.width
                         height: 24
+                        color: window.textColor
 
                         text: {
                             let strValue = skill.name + ": " + value
@@ -550,14 +564,16 @@ Window {
             Layout.preferredWidth: 150
             Layout.alignment: Qt.AlignTop
 
-            Label {
+            QtQuickControls.Label {
                 text: "Properties:"
                 Layout.fillWidth: true
+                color: window.textColor
             }
 
-            Label {
+            QtQuickControls.Label {
                 text: "Avaliable weapons:"
                 Layout.fillWidth: true
+                color: window.textColor
             }
 
             ListView {
@@ -567,10 +583,11 @@ Window {
                 height: 600
 
                 model: ListModel {}
-                delegate: Label {
+                delegate: QtQuickControls.Label {
                     required property string name
 
                     text: name
+                    color: window.textColor
                 }
 
                 function fillModel() {
@@ -608,14 +625,16 @@ Window {
             Layout.preferredWidth: 150
             Layout.alignment: Qt.AlignTop
 
-            Label {
+            QtQuickControls.Label {
                 text: ""
                 Layout.fillWidth: true
+                color: window.textColor
             }
 
-            Label {
+            QtQuickControls.Label {
                 text: "Avaliable armors:"
                 Layout.fillWidth: true
+                color: window.textColor
             }
 
             ListView {
@@ -625,10 +644,11 @@ Window {
                 height: 230
 
                 model: ListModel {}
-                delegate: Label {
+                delegate: QtQuickControls.Label {
                     required property string name
 
                     text: name
+                    color: window.textColor
                 }
 
                 function fillModel() {
@@ -666,9 +686,10 @@ Window {
             Layout.preferredWidth: 150
             Layout.alignment: Qt.AlignTop
 
-            Label {
+            QtQuickControls.Label {
                 text: "Spells:"
                 Layout.fillWidth: true
+                color: window.textColor
             }
 
             ListView {
@@ -685,12 +706,14 @@ Window {
 
                     width: spellsTable.width
                     height: 24
+                    color: window.color
 
-                    Label {
+                    QtQuickControls.Label {
                         width: parent.width
                         height: parent.height
 
                         text: spell.name
+                        color: window.textColor
                     }
 
                     CheckBox {

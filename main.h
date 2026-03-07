@@ -1,7 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "Serializer.h"
+#include "dnd/model/Serializer.h"
 
 #include <QObject>
 #include <QVector>
