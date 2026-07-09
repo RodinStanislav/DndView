@@ -428,6 +428,7 @@ public slots:
             project.weapons = model::getDefaultWeapons();
             project.spellSchools = model::getDefaultSpellSchools();
             project.spells = model::getDefaultSpells();
+            project.damageTypes = model::getDefaultDamageTypes();
 
             return;
         }

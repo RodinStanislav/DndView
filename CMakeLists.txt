@@ -53,6 +53,10 @@ qt_add_qml_module(appDndView
         QML_FILES uikit/SecondaryButton.qml
         QML_FILES uikit/GhostButton.qml
         QML_FILES uikit/OpenTextField.qml
+        RESOURCES resources/icons/arrow.svg
+        SOURCES dnd/model/DamageType.h
+        SOURCES dnd/model/DamageType.cpp
+        SOURCES dnd/model/Damage.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

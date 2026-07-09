@@ -5,9 +5,16 @@
 #include <vector>
 
 namespace dnd::model {
+struct SpellComponents {
+    bool verbal = false;
+    bool somatic = false;
+    bool material = false;
+};
+
 struct Spell {
     std::string name;
     std::string spellSchool;
+    SpellComponents components;
     uint32_t level = 0;
 };
 

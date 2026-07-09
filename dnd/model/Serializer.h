@@ -29,18 +29,21 @@ struct adl_serializer<std::optional<T>> {
 }
 
 namespace dnd::model {
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(DamageType, name);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Damage, baseHit, maxHit, damageType);
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ArmorType, name);
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Armor, name, armorType);
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(WeaponType, name);
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Weapon, name, weaponType);
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SpellSchool, name);
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Spell, name, spellSchool, level);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SpellComponents, verbal, somatic, material);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Spell, name, spellSchool, components, level);
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Class, name, armorTypes, armors, weaponTypes, weapons, proficiencySkills,
                                    spells, savingThrows, hitPoints);
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Attribute, name);
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Skill, name, dependentAttribute);
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Race, name, inherits, attributeModifiers);
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Character, name, race, classes, attributes, proficiencies);
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Project, attributes, armorTypes, weaponTypes, armors, weapons, spellSchools, spells, races, skills, classes, characters);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Project, damageTypes, attributes, armorTypes, weaponTypes, armors, weapons, spellSchools, spells, races, skills, classes, characters);
 }
 #endif // SERIALIZER_H

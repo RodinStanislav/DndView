@@ -12,9 +12,11 @@
 #include "Weapon.h"
 #include "SpellSchool.h"
 #include "Spell.h"
+#include "DamageType.h"
 
 namespace dnd::model {
 struct Project {
+    std::vector<DamageType> damageTypes;
     std::vector<Attribute> attributes;
     std::vector<WeaponType> weaponTypes;
     std::vector<Weapon> weapons;

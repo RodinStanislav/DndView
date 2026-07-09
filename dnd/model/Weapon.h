@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "Damage.h"
+
 namespace dnd::model {
 struct Weapon {
     std::string name;
