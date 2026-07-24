@@ -1,7 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "dnd/model/Serializer.h"
+#include "Sources/Dnd/Data/Serializer.h"
 
 #include <QObject>
 #include <QVector>
@@ -41,7 +41,7 @@ public:
     }
 
     Q_INVOKABLE QString getDependentAttribute() const {
-        return QString::fromStdString(data.dependentAttribute);
+        return QString::fromStdString(data.attribute);
     }
 
     dnd::model::Skill data;
@@ -83,6 +83,33 @@ public:
     dnd::model::Spell data;
 };
 
+class Background {
+    Q_GADGET
+
+    Q_PROPERTY(QString name READ getName CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Skill> skills READ getSkills CONSTANT FINAL)
+public:
+    Q_INVOKABLE QString getName() const {
+        return QString::fromStdString(data.name);
+    }
+
+    Q_INVOKABLE QVector<dnd::view::Skill> getSkills() const {
+        QVector<dnd::view::Skill> skills;
+
+        for (const auto& proficiencySkill : data.skills) {
+            skills.emplace_back();
+            skills.back().data = *std::find_if(project->skills.begin(), project->skills.end(), [&](const model::Skill& skill) {
+                return skill.name == proficiencySkill;
+            });
+        }
+
+        return skills;
+    }
+
+    model::Project const* project;
+    dnd::model::Background data;
+};
+
 class Class {
     Q_GADGET
 
@@ -90,7 +117,8 @@ class Class {
     Q_PROPERTY(QVector<dnd::view::Armor> armors READ getArmors CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Weapon> weapons READ getWeapons CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Attribute> savingThrows READ getSavingThrows CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Skill> avaliableProficiencySkills READ getAvaliableProficiencySkills CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Skill> skills READ getSkills CONSTANT FINAL)
+    Q_PROPERTY(int skillCount READ getSkillCount CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Spell> spells READ getSpells CONSTANT FINAL)
 
 public:
@@ -159,10 +187,10 @@ public:
         return savingThrows;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Skill> getAvaliableProficiencySkills() const {
+    Q_INVOKABLE QVector<dnd::view::Skill> getSkills() const {
         QVector<dnd::view::Skill> avaliableProficiencySkills;
 
-        for (const auto& proficiencySkill : data.proficiencySkills) {
+        for (const auto& proficiencySkill : data.skills) {
             avaliableProficiencySkills.emplace_back();
             avaliableProficiencySkills.back().data = *std::find_if(project->skills.begin(), project->skills.end(), [&](const model::Skill& skill) {
                 return skill.name == proficiencySkill;
@@ -170,6 +198,10 @@ public:
         }
 
         return avaliableProficiencySkills;
+    }
+
+    Q_INVOKABLE int getSkillCount() const {
+        return data.skillCount;
     }
 
     Q_INVOKABLE QVector<dnd::view::Spell> getSpells() const {
@@ -281,6 +313,8 @@ class Project : public QObject {
     Q_PROPERTY(QVector<dnd::view::Class> classes READ getAllClasses CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Armor> armors READ getAllArmors CONSTANT FINAL)
     Q_PROPERTY(QVector<dnd::view::Weapon> weapons READ getAllWeapons CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Background> backgrounds READ getAllBackgrounds CONSTANT FINAL)
+    Q_PROPERTY(QVector<dnd::view::Race> races READ getAllRaces CONSTANT FINAL)
 
 public:
 
@@ -352,6 +386,18 @@ public slots:
         }
 
         return attributes;
+    }
+
+    Q_INVOKABLE QVector<dnd::view::Background> getAllBackgrounds() const {
+        QVector<dnd::view::Background> backgrounds;
+
+        for (auto& background : project.backgrounds) {
+            backgrounds.emplace_back();
+            backgrounds.back().data = background;
+            backgrounds.back().project = &project;
+        }
+
+        return backgrounds;
     }
 
     Q_INVOKABLE QVector<dnd::view::Skill> getAllSkills() const {
@@ -429,6 +475,8 @@ public slots:
             project.spellSchools = model::getDefaultSpellSchools();
             project.spells = model::getDefaultSpells();
             project.damageTypes = model::getDefaultDamageTypes();
+            project.backgrounds = model::getDefaultBackgrounds();
+            project.feats = model::getDefaultFeats();
 
             return;
         }
