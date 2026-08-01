@@ -12,66 +12,78 @@ qt_add_executable(appDndView
     main.cpp
 )
 
-set_source_files_properties(Sources/UIKit/Theme.qml
+set_source_files_properties(Sources/View/UIKit/Theme.qml
     PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(appDndView
     URI DndView
     QML_FILES Main.qml
-    QML_FILES Sources/UIKit/Theme.qml
+    QML_FILES Sources/View/UIKit/Theme.qml
 
-        SOURCES Sources/Dnd/Data/Race.h
+        SOURCES Sources/Model/Data/Race.h
         SOURCES main.h
-        SOURCES Sources/Dnd/Data/Race.cpp
-        SOURCES Sources/Dnd/Data/Character.h
-        SOURCES Sources/Dnd/Data/Serializer.h
-        SOURCES Sources/Dnd/Data/Attribute.h
-        SOURCES Sources/Dnd/Data/Attribute.cpp
-        SOURCES Sources/Dnd/Data/Project.h
-        SOURCES Sources/Dnd/Data/Skill.h
-        SOURCES Sources/Dnd/Data/Spell.h
-        SOURCES Sources/Dnd/Data/Skill.cpp
-        SOURCES Sources/Dnd/Data/Class.h
-        SOURCES Sources/Dnd/Data/Class.cpp
-        SOURCES Sources/Dnd/Data/Weapon.h
-        SOURCES Sources/Dnd/Data/ArmorType.h
-        SOURCES Sources/Dnd/Data/ArmorType.cpp
-        SOURCES Sources/Dnd/Data/WeaponType.h
-        SOURCES Sources/Dnd/Data/WeaponType.cpp
-        SOURCES Sources/Dnd/Data/Armor.h
-        SOURCES Sources/Dnd/Data/Armor.cpp
-        SOURCES Sources/Dnd/Data/Weapon.cpp
-        SOURCES Sources/Dnd/Data/SpellSchool.h
-        SOURCES Sources/Dnd/Data/SpellSchool.cpp
-        SOURCES Sources/Dnd/Data/Spell.cpp
-        SOURCES
-        QML_FILES Sources/UIKit/ComboBox.qml
-        QML_FILES Sources/UIKit/Button.qml
-        QML_FILES Sources/UIKit/CheckBox.qml
-        QML_FILES Sources/UIKit/TextField.qml
-        QML_FILES Sources/UIKit/PrimaryButton.qml
-        QML_FILES Sources/UIKit/SecondaryButton.qml
-        QML_FILES Sources/UIKit/GhostButton.qml
-        QML_FILES Sources/UIKit/OpenTextField.qml
+        SOURCES Sources/Model/Data/Race.cpp
+        SOURCES Sources/Model/Data/Character.h
+        SOURCES Sources/Model/Data/Serializer.h
+        SOURCES Sources/Model/Data/Attribute.h
+        SOURCES Sources/Model/Data/Attribute.cpp
+        SOURCES Sources/Model/Data/Project.h
+        SOURCES Sources/Model/Data/Skill.h
+        SOURCES Sources/Model/Data/Spell.h
+        SOURCES Sources/Model/Data/Skill.cpp
+        SOURCES Sources/Model/Data/Class.h
+        SOURCES Sources/Model/Data/Class.cpp
+        SOURCES Sources/Model/Data/Weapon.h
+        SOURCES Sources/Model/Data/ArmorType.h
+        SOURCES Sources/Model/Data/ArmorType.cpp
+        SOURCES Sources/Model/Data/WeaponType.h
+        SOURCES Sources/Model/Data/WeaponType.cpp
+        SOURCES Sources/Model/Data/Armor.h
+        SOURCES Sources/Model/Data/Armor.cpp
+        SOURCES Sources/Model/Data/Weapon.cpp
+        SOURCES Sources/Model/Data/SpellSchool.h
+        SOURCES Sources/Model/Data/SpellSchool.cpp
+        SOURCES Sources/Model/Data/Spell.cpp
+        QML_FILES Sources/View/UIKit/ComboBox.qml
+        QML_FILES Sources/View/UIKit/Button.qml
+        QML_FILES Sources/View/UIKit/CheckBox.qml
+        QML_FILES Sources/View/UIKit/TextField.qml
+        QML_FILES Sources/View/UIKit/PrimaryButton.qml
+        QML_FILES Sources/View/UIKit/SecondaryButton.qml
+        QML_FILES Sources/View/UIKit/GhostButton.qml
+        QML_FILES Sources/View/UIKit/OpenTextField.qml
         RESOURCES resources/icons/arrow.svg
-        SOURCES Sources/Dnd/Data/DamageType.h
-        SOURCES Sources/Dnd/Data/DamageType.cpp
-        SOURCES Sources/Dnd/Data/Damage.h
-        QML_FILES BiographyInfoSubPage.qml CreateCharacterPage.qml
-        SOURCES Sources/Dnd/Data/Background.h
-        SOURCES Sources/Dnd/Data/Background.cpp
-        SOURCES Sources/Dnd/Data/Feat.h
-        SOURCES Sources/Dnd/Data/Feat.cpp
-        QML_FILES Sources/UIKit/Separator.qml
-        QML_FILES Sources/UIKit/TextArea.qml
-        QML_FILES Sources/UIKit/TitledComponent.qml
-        QML_FILES CreateCharacterSubPage.qml
-        SOURCES Sources/Dnd/Data/Trait.h
-        SOURCES Sources/Dnd/Data/Feature.h
-        QML_FILES RaceInfoSubPage.qml
-        QML_FILES ClassInfoSubPage.qml
-        QML_FILES AttributesAndSkillsSubPage.qml
-        QML_FILES ConfirmButtonSubPage.qml
+        SOURCES Sources/Model/Data/DamageType.h
+        SOURCES Sources/Model/Data/DamageType.cpp
+        SOURCES Sources/Model/Data/Damage.h
+        QML_FILES Sources/View/Pages/CreateCharacterPage/BiographyInfoSubPage.qml
+        QML_FILES Sources/View/Pages/CreateCharacterPage/CreateCharacterPage.qml
+        SOURCES Sources/Model/Data/Background.h
+        SOURCES Sources/Model/Data/Background.cpp
+        SOURCES Sources/Model/Data/Feat.h
+        SOURCES Sources/Model/Data/Feat.cpp
+        QML_FILES Sources/View/UIKit/HorizontalSeparator.qml
+        QML_FILES Sources/View/UIKit/TextArea.qml
+        QML_FILES Sources/View/UIKit/TitledComponent.qml
+        QML_FILES Sources/View/Pages/CreateCharacterPage/CreateCharacterSubPage.qml
+        SOURCES Sources/Model/Data/Trait.h
+        SOURCES Sources/Model/Data/Feature.h
+        QML_FILES Sources/View/Pages/CreateCharacterPage/RaceInfoSubPage.qml
+        QML_FILES Sources/View/Pages/CreateCharacterPage/ClassInfoSubPage.qml
+        QML_FILES Sources/View/Pages/CreateCharacterPage/AttributesAndSkillsSubPage.qml
+        QML_FILES Sources/View/Pages/CreateCharacterPage/FinalSubPage.qml
+        QML_FILES Sources/View/UIKit/Label.qml
+        QML_FILES Sources/View/UIKit/HorizontalSpacer.qml
+        QML_FILES Sources/View/UIKit/VerticalSpacer.qml
+        QML_FILES Sources/View/UIKit/SingleLineBorder.qml
+        QML_FILES Sources/View/Pages/SelectCharacterPage/SelectCharacterPage.qml
+        QML_FILES Sources/View/Pages/CharacterViewPage/CharacterViewPage.qml
+        QML_FILES Sources/View/LeftSideBar.qml
+        QML_FILES Sources/View/Pages/CharacterViewPage/BaseInfoBlock.qml
+        QML_FILES Sources/View/Pages/CharacterViewPage/AdditionalInfoBlock.qml
+        QML_FILES Sources/View/Pages/CharacterViewPage/CharacterViewBlock.qml
+        QML_FILES Sources/View/Pages/CharacterViewPage/AttributesInfoBlock.qml
+        QML_FILES Sources/View/Pages/CharacterViewPage/SkillsInfoBlock.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

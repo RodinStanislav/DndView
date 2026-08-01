@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
 
-    dnd::view::Project project;
+    RPEngine::dnd::view::Project project;
     project.loadProject();
 
     engine.rootContext()->setContextProperty("backend", &project);

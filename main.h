@@ -1,7 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "Sources/Dnd/Data/Serializer.h"
+#include "Sources/Model/Data/Serializer.h"
 
 #include <QObject>
 #include <QVector>
@@ -10,7 +10,7 @@
 #include <fstream>
 #include <iostream>
 
-namespace dnd::view {
+namespace RPEngine::dnd::view {
 
 class Attribute {
     Q_GADGET
@@ -26,7 +26,7 @@ public:
         return value;
     }
 
-    dnd::model::Attribute data;
+    RPEngine::dnd::model::Attribute data;
     int value = 0;
 };
 
@@ -44,7 +44,7 @@ public:
         return QString::fromStdString(data.attribute);
     }
 
-    dnd::model::Skill data;
+    RPEngine::dnd::model::Skill data;
 };
 
 class Armor {
@@ -56,7 +56,7 @@ public:
         return QString::fromStdString(data.name);
     }
 
-    dnd::model::Armor data;
+    RPEngine::dnd::model::Armor data;
 };
 
 class Weapon {
@@ -68,7 +68,7 @@ public:
         return QString::fromStdString(data.name);
     }
 
-    dnd::model::Weapon data;
+    RPEngine::dnd::model::Weapon data;
 };
 
 class Spell {
@@ -80,21 +80,21 @@ public:
         return QString::fromStdString(data.name);
     }
 
-    dnd::model::Spell data;
+    RPEngine::dnd::model::Spell data;
 };
 
 class Background {
     Q_GADGET
 
     Q_PROPERTY(QString name READ getName CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Skill> skills READ getSkills CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Skill> skills READ getSkills CONSTANT FINAL)
 public:
     Q_INVOKABLE QString getName() const {
         return QString::fromStdString(data.name);
     }
 
-    Q_INVOKABLE QVector<dnd::view::Skill> getSkills() const {
-        QVector<dnd::view::Skill> skills;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Skill> getSkills() const {
+        QVector<RPEngine::dnd::view::Skill> skills;
 
         for (const auto& proficiencySkill : data.skills) {
             skills.emplace_back();
@@ -107,27 +107,27 @@ public:
     }
 
     model::Project const* project;
-    dnd::model::Background data;
+    RPEngine::dnd::model::Background data;
 };
 
 class Class {
     Q_GADGET
 
     Q_PROPERTY(QString name READ getName CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Armor> armors READ getArmors CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Weapon> weapons READ getWeapons CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Attribute> savingThrows READ getSavingThrows CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Skill> skills READ getSkills CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Armor> armors READ getArmors CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Weapon> weapons READ getWeapons CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Attribute> savingThrows READ getSavingThrows CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Skill> skills READ getSkills CONSTANT FINAL)
     Q_PROPERTY(int skillCount READ getSkillCount CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Spell> spells READ getSpells CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Spell> spells READ getSpells CONSTANT FINAL)
 
 public:
     Q_INVOKABLE QString getName() const {
         return QString::fromStdString(data.name);
     }
 
-    Q_INVOKABLE QVector<dnd::view::Armor> getArmors() const {
-        QVector<dnd::view::Armor> armors;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Armor> getArmors() const {
+        QVector<RPEngine::dnd::view::Armor> armors;
 
         for (const auto& armorTypeName : data.armorTypes) {
             for (const auto& armor : project->armors) {
@@ -150,8 +150,8 @@ public:
         return armors;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Weapon> getWeapons() const {
-        QVector<dnd::view::Weapon> weapons;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Weapon> getWeapons() const {
+        QVector<RPEngine::dnd::view::Weapon> weapons;
 
         for (const auto& weaponTypeName : data.weaponTypes) {
             for (const auto& weapon : project->weapons) {
@@ -174,8 +174,8 @@ public:
         return weapons;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Attribute> getSavingThrows() const {
-        QVector<dnd::view::Attribute> savingThrows;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Attribute> getSavingThrows() const {
+        QVector<RPEngine::dnd::view::Attribute> savingThrows;
 
         for (const auto& savingThrow : data.savingThrows) {
             savingThrows.emplace_back();
@@ -187,8 +187,8 @@ public:
         return savingThrows;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Skill> getSkills() const {
-        QVector<dnd::view::Skill> avaliableProficiencySkills;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Skill> getSkills() const {
+        QVector<RPEngine::dnd::view::Skill> avaliableProficiencySkills;
 
         for (const auto& proficiencySkill : data.skills) {
             avaliableProficiencySkills.emplace_back();
@@ -204,8 +204,8 @@ public:
         return data.skillCount;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Spell> getSpells() const {
-        QVector<dnd::view::Spell> spells;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Spell> getSpells() const {
+        QVector<RPEngine::dnd::view::Spell> spells;
 
         for (const auto& spellName : data.spells) {
             spells.emplace_back();
@@ -218,22 +218,35 @@ public:
     }
 
     model::Project const* project;
-    dnd::model::Class data;
+    RPEngine::dnd::model::Class data;
 };
 
 class Race {
     Q_GADGET
 
     Q_PROPERTY(QString name READ getName CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Attribute> attributeModifiers READ getAttributeModifiers CONSTANT FINAL)
+    Q_PROPERTY(int speed READ getSpeed CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Attribute> attributeModifiers READ getAttributeModifiers CONSTANT FINAL)
 public:
     Q_INVOKABLE QString getName() const {
         return QString::fromStdString(data.name);
     }
 
-    Q_INVOKABLE QVector<dnd::view::Attribute> getAttributeModifiers() const {
-        QMap<QString, dnd::view::Attribute> attributeModifiers;
-        std::unordered_map<std::string, dnd::model::Attribute> attributes;
+    Q_INVOKABLE int getSpeed() const {
+        if (data.inherits.has_value() && !data.speed.has_value()) {
+            auto baseRace = *std::find_if(project->races.begin(), project->races.end(), [&](const model::Race& race) {
+                return race.name == *data.inherits;
+            });
+
+            return baseRace.speed.value();
+        }
+
+        return data.speed.value();
+    }
+
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Attribute> getAttributeModifiers() const {
+        QMap<QString, RPEngine::dnd::view::Attribute> attributeModifiers;
+        std::unordered_map<std::string, RPEngine::dnd::model::Attribute> attributes;
 
         if (data.inherits.has_value()) {
             auto baseRace = *std::find_if(project->races.begin(), project->races.end(), [&](const model::Race& race) {
@@ -270,28 +283,62 @@ public:
             attributeModifier.value = value;
         }
 
-        auto vector = QVector<dnd::view::Attribute>(attributeModifiers.begin(), attributeModifiers.end());
+        auto vector = QVector<RPEngine::dnd::view::Attribute>(attributeModifiers.begin(), attributeModifiers.end());
 
         return vector;
     }
 
     model::Project const* project;
-    dnd::model::Race data;
+    RPEngine::dnd::model::Race data;
 };
 
 class Character {
     Q_GADGET
 
     Q_PROPERTY(QString name READ getName CONSTANT FINAL)
-    Q_PROPERTY(dnd::view::Race race READ getRace CONSTANT FINAL)
+    Q_PROPERTY(RPEngine::dnd::view::Background background READ getBackground CONSTANT FINAL)
+    Q_PROPERTY(RPEngine::dnd::view::Race race READ getRace CONSTANT FINAL)
+    Q_PROPERTY(RPEngine::dnd::view::Class classData READ getClass CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Attribute> attributes READ getAttributes CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Skill> skills READ getSkills CONSTANT FINAL)
+    Q_PROPERTY(int level READ getLevel CONSTANT FINAL)
+    Q_PROPERTY(int experience READ getExperience CONSTANT FINAL)
+    Q_PROPERTY(int hitPoints READ getHitPoints CONSTANT FINAL)
+    Q_PROPERTY(int maximumHitPoints READ getMaximumHitPoints CONSTANT FINAL)
+    Q_PROPERTY(int additionalHitPoints READ getAdditionalHitPoints CONSTANT FINAL)
 public:
     Q_INVOKABLE QString getName() const {
         return QString::fromStdString(data.name);
     }
 
-    Q_INVOKABLE dnd::view::Race getRace() const {
-        dnd::view::Race race;
+    Q_INVOKABLE int getHitPoints() const {
+        return data.hitPoints;
+    }
 
+    Q_INVOKABLE int getMaximumHitPoints() const {
+        return data.maximumHitPoints;
+    }
+
+    Q_INVOKABLE int getAdditionalHitPoints() const {
+        return data.additionalHitPoints;
+    }
+
+    Q_INVOKABLE QVector<dnd::view::Attribute> getAttributes() const {
+        QVector<dnd::view::Attribute> attributes;
+
+        for (auto& attribute : data.attributes) {
+            attributes.emplace_back();
+            attributes.back().data.name = attribute.first;
+            attributes.back().value = attribute.second;
+        }
+
+        return attributes;
+    }
+
+    Q_INVOKABLE RPEngine::dnd::view::Race getRace() const {
+        RPEngine::dnd::view::Race race;
+
+        race.project = project;
         race.data = *std::find_if(project->races.begin(), project->races.end(), [this](const model::Race& race) {
             return race.name == data.race;
         });
@@ -299,22 +346,64 @@ public:
         return race;
     }
 
+    Q_INVOKABLE RPEngine::dnd::view::Class getClass() const {
+        RPEngine::dnd::view::Class classIt;
+
+        classIt.project = project;
+        classIt.data = *std::find_if(project->classes.begin(), project->classes.end(), [this](const model::Class& classData) {
+            return classData.name == data.classes.begin()->first;
+        });
+
+        return classIt;
+    }
+
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Skill> getSkills() const {
+        QVector<RPEngine::dnd::view::Skill> skills;
+
+        for (const auto& proficiencySkill : data.skills) {
+            skills.emplace_back();
+            skills.back().data = *std::find_if(project->skills.begin(), project->skills.end(), [&](const model::Skill& skill) {
+                return skill.name == proficiencySkill;
+            });
+        }
+
+        return skills;
+    }
+
+    Q_INVOKABLE RPEngine::dnd::view::Background getBackground() const {
+        RPEngine::dnd::view::Background background;
+
+        background.project = project;
+        background.data = *std::find_if(project->backgrounds.begin(), project->backgrounds.end(), [this](const model::Background& background){
+            return background.name == data.background;
+        });
+
+        return background;
+    }
+
+    Q_INVOKABLE int getLevel() const {
+        return data.level;
+    }
+
+    Q_INVOKABLE int getExperience() const {
+        return data.experience;
+    }
 
     model::Project const* project;
-    dnd::model::Character data;
+    RPEngine::dnd::model::Character data;
 };
 
 class Project : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(QVector<dnd::view::Character> characters READ getAllCharacters CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Attribute> attributes READ getAllAttributes CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Skill> skills READ getAllSkills CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Class> classes READ getAllClasses CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Armor> armors READ getAllArmors CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Weapon> weapons READ getAllWeapons CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Background> backgrounds READ getAllBackgrounds CONSTANT FINAL)
-    Q_PROPERTY(QVector<dnd::view::Race> races READ getAllRaces CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Character> characters READ getAllCharacters CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Attribute> attributes READ getAllAttributes CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Skill> skills READ getAllSkills CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Class> classes READ getAllClasses CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Armor> armors READ getAllArmors CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Weapon> weapons READ getAllWeapons CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Background> backgrounds READ getAllBackgrounds CONSTANT FINAL)
+    Q_PROPERTY(QVector<RPEngine::dnd::view::Race> races READ getAllRaces CONSTANT FINAL)
 
 public:
 
@@ -323,8 +412,8 @@ public:
     }
 
 public slots:
-    Q_INVOKABLE QVector<dnd::view::Race> getAllRaces() const {
-        QVector<dnd::view::Race> data(project.races.size());
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Race> getAllRaces() const {
+        QVector<RPEngine::dnd::view::Race> data(project.races.size());
         auto iterator = data.begin();
         for (const auto& race : project.races) {
             iterator->data = race;
@@ -335,8 +424,8 @@ public slots:
         return data;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Race> getBaseRaces() const {
-        QVector<dnd::view::Race> data;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Race> getBaseRaces() const {
+        QVector<RPEngine::dnd::view::Race> data;
         for (const auto& race : project.races) {
             if (!race.inherits.has_value()) {
                 data.emplace_back();
@@ -348,8 +437,8 @@ public slots:
         return data;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Race> getInheritedRaces(const QString& baseRace) const {
-        QVector<dnd::view::Race> data;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Race> getInheritedRaces(const QString& baseRace) const {
+        QVector<RPEngine::dnd::view::Race> data;
         for (const auto& race : project.races) {
             if (!race.inherits.has_value()) {
                 continue;
@@ -365,8 +454,8 @@ public slots:
         return data;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Character> getAllCharacters() const {
-        QVector<dnd::view::Character> data;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Character> getAllCharacters() const {
+        QVector<RPEngine::dnd::view::Character> data;
         for (const auto& character : project.characters) {
             data.emplace_back();
             data.back().data = character;
@@ -376,8 +465,8 @@ public slots:
         return data;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Attribute> getAllAttributes() const {
-        QVector<dnd::view::Attribute> attributes;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Attribute> getAllAttributes() const {
+        QVector<RPEngine::dnd::view::Attribute> attributes;
 
         for (auto& attribute : project.attributes) {
             attributes.emplace_back();
@@ -388,8 +477,8 @@ public slots:
         return attributes;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Background> getAllBackgrounds() const {
-        QVector<dnd::view::Background> backgrounds;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Background> getAllBackgrounds() const {
+        QVector<RPEngine::dnd::view::Background> backgrounds;
 
         for (auto& background : project.backgrounds) {
             backgrounds.emplace_back();
@@ -400,8 +489,8 @@ public slots:
         return backgrounds;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Skill> getAllSkills() const {
-        QVector<dnd::view::Skill> skills;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Skill> getAllSkills() const {
+        QVector<RPEngine::dnd::view::Skill> skills;
 
         for (auto& skill : project.skills) {
             skills.emplace_back();
@@ -411,8 +500,8 @@ public slots:
         return skills;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Class> getAllClasses() const {
-        QVector<dnd::view::Class> classes;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Class> getAllClasses() const {
+        QVector<RPEngine::dnd::view::Class> classes;
 
         for (auto& classData : project.classes) {
             classes.emplace_back();
@@ -423,8 +512,8 @@ public slots:
         return classes;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Armor> getAllArmors() const {
-        QVector<dnd::view::Armor> armors;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Armor> getAllArmors() const {
+        QVector<RPEngine::dnd::view::Armor> armors;
 
         for (auto& armor : project.armors) {
             armors.emplace_back();
@@ -434,8 +523,8 @@ public slots:
         return armors;
     }
 
-    Q_INVOKABLE QVector<dnd::view::Weapon> getAllWeapons() const {
-        QVector<dnd::view::Weapon> weapons;
+    Q_INVOKABLE QVector<RPEngine::dnd::view::Weapon> getAllWeapons() const {
+        QVector<RPEngine::dnd::view::Weapon> weapons;
 
         for (auto& weapon : project.weapons) {
             weapons.emplace_back();
@@ -445,18 +534,64 @@ public slots:
         return weapons;
     }
 
-    Q_INVOKABLE void createCharacter(const QString& name, const QString& raceName) {
-        dnd::model::Character newCharacter;
-        auto allRaces = dnd::model::getDefaultRaces();
-        newCharacter.name = name.toStdString();
-        newCharacter.race = raceName.toStdString();
+    Q_INVOKABLE void createCharacter(const QString& jsonData) {
+        RPEngine::dnd::model::Character newCharacter;
 
-        for (auto& attributeName : project.attributes) {
-            newCharacter.attributes[attributeName.name] = 8;
+        auto json = nlohmann::json::parse(jsonData.toStdString());
+
+        newCharacter.name = json["name"];
+        newCharacter.background = json["background"];
+        newCharacter.history = json["history"];
+        newCharacter.race = json["raceName"];
+
+        std::string className = json["className"];
+        newCharacter.classes[className] = 1;
+
+        auto& attributes = json["attributes"];
+        auto& skills = json["skills"];
+
+        int constitutionValue = 0;
+
+        for (auto& attribute : attributes) {
+            std::string attributeName = attribute["name"];
+            int value = attribute["value"];
+            newCharacter.attributes[attributeName] = value;
+
+            if (attributeName == model::CONSTITUTION_ATTRIBUTE) {
+                constitutionValue = value;
+            }
         }
+
+        for (auto& skill : skills) {
+            std::string skillName = skill["name"];
+            newCharacter.skills.push_back(skillName);
+        }
+
+        auto classDetail = *std::find_if(project.classes.begin(), project.classes.end(), [&](const model::Class& projectClass) {
+            return projectClass.name == newCharacter.classes.begin()->first;
+        });
+
+        newCharacter.level = 1;
+        newCharacter.experience = 0;
+        newCharacter.maximumHitPoints = classDetail.hitPoints + (static_cast<int>(constitutionValue / 2) - 5);
+        newCharacter.hitPoints = newCharacter.maximumHitPoints;
+        newCharacter.additionalHitPoints = 0;
 
         project.characters.push_back(newCharacter);
         emit characterListChanged();
+    }
+
+    Q_INVOKABLE dnd::view::Character findCharacter(const QString& characterName) const {
+        auto projectCharacter = *std::find_if(project.characters.begin(), project.characters.end(),
+            [characterName](const dnd::model::Character& character) {
+                return character.name == characterName.toStdString();
+            }
+        );
+
+        dnd::view::Character character;
+        character.data = projectCharacter;
+        character.project = &project;
+        return character;
     }
 
     void loadProject() {
@@ -511,7 +646,7 @@ signals:
     void characterListChanged();
 
 public:
-    dnd::model::Project project;
+    RPEngine::dnd::model::Project project;
 };
 
 }
